@@ -1,1109 +1,1401 @@
+<!-- bash
+
+cat > /mnt/user-data/outputs/attendance_system.html << 'HTMLEOF' -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AttendTrack — Employee Attendance System</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>AttendTrack — Attendance Management</title>
 <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 <style>
-  :root {
-    --primary: #1a56db;
-    --primary-dark: #1340a8;
-    --primary-light: #e8f0fe;
-    --success: #0e9f6e;
-    --success-light: #e6f9f0;
-    --danger: #e02424;
-    --danger-light: #fdf2f2;
-    --warning: #c27803;
-    --warning-light: #fef3c7;
-    --gray-50: #f9fafb;
-    --gray-100: #f3f4f6;
-    --gray-200: #e5e7eb;
-    --gray-300: #d1d5db;
-    --gray-400: #9ca3af;
-    --gray-500: #6b7280;
-    --gray-600: #4b5563;
-    --gray-700: #374151;
-    --gray-800: #1f2937;
-    --gray-900: #111827;
-    --radius: 10px;
-    --radius-sm: 6px;
-    --shadow: 0 1px 3px rgba(0,0,0,0.1), 0 1px 2px rgba(0,0,0,0.06);
-    --shadow-md: 0 4px 6px rgba(0,0,0,0.07), 0 2px 4px rgba(0,0,0,0.06);
-    --shadow-lg: 0 10px 15px rgba(0,0,0,0.1), 0 4px 6px rgba(0,0,0,0.05);
-  }
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; background: var(--gray-100); color: var(--gray-800); min-height: 100vh; }
-  
-  /* Auth */
-  #auth-screen { min-height: 100vh; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, #1a56db 0%, #1340a8 100%); padding: 1rem; }
-  .auth-card { background: white; border-radius: 16px; padding: 2.5rem; width: 100%; max-width: 420px; box-shadow: var(--shadow-lg); }
-  .auth-logo { display: flex; align-items: center; gap: 10px; margin-bottom: 2rem; }
-  .auth-logo-icon { width: 44px; height: 44px; background: var(--primary); border-radius: 10px; display: flex; align-items: center; justify-content: center; }
-  .auth-logo-icon svg { width: 24px; height: 24px; fill: white; }
-  .auth-logo-text { font-size: 1.4rem; font-weight: 700; color: var(--gray-900); }
-  .auth-logo-sub { font-size: 0.75rem; color: var(--gray-500); margin-top: 1px; }
-  .auth-title { font-size: 1.5rem; font-weight: 700; color: var(--gray-900); margin-bottom: 0.4rem; }
-  .auth-subtitle { font-size: 0.9rem; color: var(--gray-500); margin-bottom: 1.75rem; }
-  .form-group { margin-bottom: 1.1rem; }
-  label { display: block; font-size: 0.85rem; font-weight: 600; color: var(--gray-700); margin-bottom: 0.4rem; }
-  input[type=text], input[type=password], input[type=email], input[type=date], textarea, select {
-    width: 100%; padding: 0.6rem 0.85rem; border: 1.5px solid var(--gray-200); border-radius: var(--radius-sm);
-    font-size: 0.9rem; color: var(--gray-800); background: white; transition: border-color 0.15s;
-    font-family: inherit;
-  }
-  input:focus, textarea:focus, select:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(26,86,219,0.12); }
-  textarea { resize: vertical; min-height: 80px; }
-  .btn { display: inline-flex; align-items: center; gap: 6px; padding: 0.6rem 1.2rem; border-radius: var(--radius-sm); font-size: 0.875rem; font-weight: 600; cursor: pointer; border: none; transition: all 0.15s; }
-  .btn-primary { background: var(--primary); color: white; }
-  .btn-primary:hover { background: var(--primary-dark); }
-  .btn-success { background: var(--success); color: white; }
-  .btn-success:hover { background: #0a7d56; }
-  .btn-danger { background: var(--danger); color: white; }
-  .btn-danger:hover { background: #b91c1c; }
-  .btn-outline { background: white; color: var(--gray-700); border: 1.5px solid var(--gray-200); }
-  .btn-outline:hover { background: var(--gray-50); border-color: var(--gray-300); }
-  .btn-warning { background: #f59e0b; color: white; }
-  .btn-warning:hover { background: var(--warning); }
-  .btn-full { width: 100%; justify-content: center; padding: 0.75rem; font-size: 0.95rem; }
-  .btn-sm { padding: 0.35rem 0.75rem; font-size: 0.8rem; }
+:root{
+  --ink:#0f1923;--ink2:#2d3748;--ink3:#4a5568;--ink4:#718096;
+  --line:#e2e8f0;--line2:#edf2f7;--surface:#ffffff;--bg:#f7f9fc;
+  --blue:#2563eb;--blue-d:#1d4ed8;--blue-l:#eff6ff;--blue-m:#bfdbfe;
+  --green:#059669;--green-l:#ecfdf5;--green-m:#a7f3d0;
+  --red:#dc2626;--red-l:#fef2f2;--red-m:#fecaca;
+  --amber:#d97706;--amber-l:#fffbeb;--amber-m:#fde68a;
+  --r:10px;--r-sm:6px;--r-lg:14px;
+  --sh:0 1px 3px rgba(0,0,0,.08),0 1px 2px rgba(0,0,0,.05);
+  --sh-md:0 4px 12px rgba(0,0,0,.08);
+  --sh-lg:0 12px 32px rgba(0,0,0,.12);
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html{scroll-behavior:smooth}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:var(--bg);color:var(--ink);font-size:15px;line-height:1.5;min-height:100vh}
+button{cursor:pointer;font-family:inherit}
+input,select,textarea{font-family:inherit}
+a{color:var(--blue)}
 
-  /* Layout */
-  #app { display: none; }
-  .sidebar { position: fixed; left: 0; top: 0; bottom: 0; width: 240px; background: var(--gray-900); padding: 1.25rem 0; overflow-y: auto; z-index: 100; }
-  .sidebar-logo { display: flex; align-items: center; gap: 10px; padding: 0 1.25rem 1.25rem; border-bottom: 1px solid rgba(255,255,255,0.08); margin-bottom: 0.5rem; }
-  .sidebar-logo-icon { width: 36px; height: 36px; background: var(--primary); border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-  .sidebar-logo-icon svg { width: 20px; height: 20px; fill: white; }
-  .sidebar-logo-text { font-size: 1rem; font-weight: 700; color: white; line-height: 1.1; }
-  .sidebar-logo-sub { font-size: 0.65rem; color: var(--gray-400); }
-  .nav-section { padding: 0.4rem 0.75rem; font-size: 0.65rem; font-weight: 700; color: var(--gray-500); letter-spacing: 0.08em; text-transform: uppercase; margin-top: 0.5rem; }
-  .nav-item { display: flex; align-items: center; gap: 10px; padding: 0.6rem 1.25rem; color: var(--gray-400); font-size: 0.875rem; font-weight: 500; cursor: pointer; transition: all 0.15s; border-left: 3px solid transparent; }
-  .nav-item:hover { background: rgba(255,255,255,0.06); color: white; }
-  .nav-item.active { background: rgba(26,86,219,0.2); color: white; border-left-color: var(--primary); }
-  .nav-item svg { width: 18px; height: 18px; flex-shrink: 0; }
-  .sidebar-footer { position: absolute; bottom: 0; left: 0; right: 0; padding: 1rem 1.25rem; border-top: 1px solid rgba(255,255,255,0.08); }
-  .user-info { display: flex; align-items: center; gap: 10px; }
-  .user-avatar { width: 34px; height: 34px; border-radius: 50%; background: var(--primary); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.8rem; color: white; flex-shrink: 0; }
-  .user-name { font-size: 0.85rem; font-weight: 600; color: white; }
-  .user-role { font-size: 0.7rem; color: var(--gray-400); }
-  .logout-btn { margin-left: auto; background: none; border: none; cursor: pointer; color: var(--gray-500); padding: 4px; border-radius: 4px; display: flex; }
-  .logout-btn:hover { color: var(--danger); }
-  .main { margin-left: 240px; min-height: 100vh; padding: 1.75rem; }
-  .page { display: none; }
-  .page.active { display: block; }
-  .page-header { margin-bottom: 1.5rem; }
-  .page-title { font-size: 1.5rem; font-weight: 700; color: var(--gray-900); }
-  .page-subtitle { font-size: 0.875rem; color: var(--gray-500); margin-top: 0.2rem; }
-  
-  /* Cards */
-  .card { background: white; border-radius: var(--radius); box-shadow: var(--shadow); padding: 1.5rem; }
-  .card-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.25rem; }
-  .card-title { font-size: 1rem; font-weight: 700; color: var(--gray-800); }
-  .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1rem; margin-bottom: 1.5rem; }
-  .stat-card { background: white; border-radius: var(--radius); box-shadow: var(--shadow); padding: 1.25rem; display: flex; align-items: flex-start; gap: 1rem; }
-  .stat-icon { width: 44px; height: 44px; border-radius: 10px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-  .stat-icon svg { width: 22px; height: 22px; }
-  .stat-label { font-size: 0.78rem; color: var(--gray-500); font-weight: 500; }
-  .stat-value { font-size: 1.6rem; font-weight: 700; color: var(--gray-900); line-height: 1.1; }
-  
-  /* Table */
-  .table-wrap { overflow-x: auto; }
-  table { width: 100%; border-collapse: collapse; font-size: 0.875rem; }
-  thead th { padding: 0.65rem 1rem; text-align: left; font-size: 0.75rem; font-weight: 700; color: var(--gray-500); text-transform: uppercase; letter-spacing: 0.05em; background: var(--gray-50); border-bottom: 1px solid var(--gray-200); }
-  tbody td { padding: 0.75rem 1rem; border-bottom: 1px solid var(--gray-100); color: var(--gray-700); vertical-align: middle; }
-  tbody tr:hover { background: var(--gray-50); }
-  tbody tr:last-child td { border-bottom: none; }
-  
-  /* Badges */
-  .badge { display: inline-flex; align-items: center; padding: 0.2rem 0.6rem; border-radius: 20px; font-size: 0.75rem; font-weight: 600; }
-  .badge-success { background: var(--success-light); color: #065f46; }
-  .badge-danger { background: var(--danger-light); color: #9b1c1c; }
-  .badge-warning { background: var(--warning-light); color: #92400e; }
-  .badge-info { background: var(--primary-light); color: #1e40af; }
-  .badge-gray { background: var(--gray-100); color: var(--gray-600); }
-  
-  /* Alert */
-  .alert { padding: 0.75rem 1rem; border-radius: var(--radius-sm); font-size: 0.875rem; margin-bottom: 1rem; display: flex; align-items: flex-start; gap: 8px; }
-  .alert-success { background: var(--success-light); color: #065f46; border: 1px solid #a7f3d0; }
-  .alert-danger { background: var(--danger-light); color: #9b1c1c; border: 1px solid #fca5a5; }
-  .alert-info { background: var(--primary-light); color: #1e40af; border: 1px solid #bfdbfe; }
-  .alert-warning { background: var(--warning-light); color: #92400e; border: 1px solid #fde68a; }
+/* ── SCREEN ROUTER ── */
+.screen{display:none!important}
+.screen.on{display:block!important}
 
-  /* Modal */
-  .modal-backdrop { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 200; display: flex; align-items: center; justify-content: center; padding: 1rem; }
-  .modal { background: white; border-radius: var(--radius); width: 100%; max-width: 500px; box-shadow: var(--shadow-lg); max-height: 90vh; overflow-y: auto; }
-  .modal-header { padding: 1.25rem 1.5rem; border-bottom: 1px solid var(--gray-200); display: flex; align-items: center; justify-content: space-between; }
-  .modal-title { font-size: 1rem; font-weight: 700; }
-  .modal-body { padding: 1.5rem; }
-  .modal-footer { padding: 1rem 1.5rem; border-top: 1px solid var(--gray-200); display: flex; gap: 0.75rem; justify-content: flex-end; }
-  .modal-close { background: none; border: none; cursor: pointer; color: var(--gray-400); font-size: 1.25rem; padding: 4px; display: flex; border-radius: 4px; }
-  .modal-close:hover { color: var(--gray-700); background: var(--gray-100); }
-  
-  /* Check-in card */
-  .checkin-card { background: linear-gradient(135deg, #1a56db 0%, #1340a8 100%); border-radius: var(--radius); padding: 2rem; color: white; margin-bottom: 1.5rem; }
-  .checkin-time { font-size: 3rem; font-weight: 700; letter-spacing: -1px; font-variant-numeric: tabular-nums; }
-  .checkin-date { font-size: 0.9rem; opacity: 0.8; margin-top: 0.25rem; }
-  .checkin-status { display: inline-flex; align-items: center; gap: 6px; margin-top: 1rem; padding: 0.4rem 0.85rem; border-radius: 20px; font-size: 0.8rem; font-weight: 600; }
-  .status-checked-in { background: rgba(255,255,255,0.2); }
-  .status-not-checked { background: rgba(255,255,255,0.12); }
-  .checkin-actions { display: flex; gap: 0.75rem; margin-top: 1.5rem; }
-  .btn-checkin { background: white; color: var(--primary); font-weight: 700; font-size: 1rem; padding: 0.75rem 2rem; }
-  .btn-checkin:hover { background: var(--primary-light); }
-  .btn-checkout { background: rgba(255,255,255,0.15); color: white; border: 1.5px solid rgba(255,255,255,0.4); font-size: 1rem; padding: 0.75rem 2rem; }
-  .btn-checkout:hover { background: rgba(255,255,255,0.25); }
-  
-  /* Holiday banner */
-  .holiday-banner { background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); border-radius: var(--radius); padding: 1.25rem 1.5rem; color: white; display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem; }
-  .holiday-banner svg { width: 28px; height: 28px; flex-shrink: 0; fill: white; opacity: 0.9; }
-  
-  /* Form helpers */
-  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
-  .divider { height: 1px; background: var(--gray-200); margin: 1.25rem 0; }
-  .empty-state { text-align: center; padding: 2.5rem; color: var(--gray-400); }
-  .empty-state svg { width: 48px; height: 48px; margin: 0 auto 1rem; fill: var(--gray-300); display: block; }
-  .location-text { font-size: 0.8rem; color: var(--gray-500); display: flex; align-items: center; gap: 4px; }
-  
-  @media (max-width: 768px) {
-    .sidebar { transform: translateX(-100%); }
-    .main { margin-left: 0; padding: 1rem; }
-    .form-row { grid-template-columns: 1fr; }
-    .checkin-time { font-size: 2.2rem; }
-  }
+/* ── SETUP / AUTH ── */
+#screen-setup,#screen-login{min-height:100vh;display:flex!important;align-items:center;justify-content:center;padding:1rem;background:linear-gradient(145deg,#1e3a5f 0%,#2563eb 100%)}
+.auth-box{background:var(--surface);border-radius:var(--r-lg);padding:2.5rem;width:100%;max-width:440px;box-shadow:var(--sh-lg)}
+.auth-brand{display:flex;align-items:center;gap:12px;margin-bottom:2rem}
+.brand-icon{width:48px;height:48px;background:var(--blue);border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.brand-icon svg{width:26px;height:26px;fill:white}
+.brand-name{font-size:1.3rem;font-weight:800;color:var(--ink);letter-spacing:-.3px}
+.brand-tagline{font-size:.72rem;color:var(--ink4);margin-top:1px;letter-spacing:.02em}
+.auth-heading{font-size:1.45rem;font-weight:800;color:var(--ink);margin-bottom:.3rem;letter-spacing:-.3px}
+.auth-sub{font-size:.875rem;color:var(--ink4);margin-bottom:1.75rem}
+.setup-steps{display:flex;gap:6px;margin-bottom:1.75rem}
+.step-dot{flex:1;height:3px;border-radius:2px;background:var(--line)}
+.step-dot.done{background:var(--blue)}
+.step-dot.active{background:var(--blue);opacity:.5}
 
-  .hidden { display: none !important; }
-  .text-center { text-align: center; }
-  .mt-1 { margin-top: 0.5rem; }
-  .mt-2 { margin-top: 1rem; }
-  .mb-1 { margin-bottom: 0.5rem; }
-  .gap-2 { display: flex; gap: 0.5rem; flex-wrap: wrap; }
-  .text-sm { font-size: 0.8rem; }
-  .text-muted { color: var(--gray-500); }
-  .fw-600 { font-weight: 600; }
+/* ── FORM ── */
+.fg{margin-bottom:1rem}
+.fg label{display:block;font-size:.8rem;font-weight:700;color:var(--ink2);margin-bottom:.35rem;letter-spacing:.01em}
+.fg input,.fg select,.fg textarea{width:100%;padding:.62rem .875rem;border:1.5px solid var(--line);border-radius:var(--r-sm);font-size:.9rem;color:var(--ink);background:var(--surface);transition:border-color .15s,box-shadow .15s;line-height:1.4}
+.fg input:focus,.fg select:focus,.fg textarea:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 3px rgba(37,99,235,.12)}
+.fg textarea{resize:vertical;min-height:80px}
+.fg-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+.fg-hint{font-size:.75rem;color:var(--ink4);margin-top:.3rem}
+.input-eye{position:relative}
+.input-eye input{padding-right:2.5rem}
+.eye-btn{position:absolute;right:.75rem;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--ink4);padding:4px;display:flex}
+.eye-btn:hover{color:var(--ink2)}
+
+/* ── BUTTONS ── */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;padding:.6rem 1.1rem;border-radius:var(--r-sm);font-size:.875rem;font-weight:700;border:none;transition:all .15s;white-space:nowrap;line-height:1}
+.btn-primary{background:var(--blue);color:white}
+.btn-primary:hover{background:var(--blue-d)}
+.btn-primary:active{transform:scale(.98)}
+.btn-success{background:var(--green);color:white}
+.btn-success:hover{background:#047857}
+.btn-danger{background:var(--red);color:white}
+.btn-danger:hover{background:#b91c1c}
+.btn-warning{background:var(--amber);color:white}
+.btn-warning:hover{background:#b45309}
+.btn-ghost{background:transparent;color:var(--ink3);border:1.5px solid var(--line)}
+.btn-ghost:hover{background:var(--bg);border-color:var(--ink4)}
+.btn-full{width:100%;padding:.78rem}
+.btn-lg{font-size:1rem;padding:.8rem 1.5rem}
+.btn-sm{padding:.33rem .7rem;font-size:.78rem}
+.btn:disabled{opacity:.55;cursor:not-allowed;transform:none!important}
+
+/* ── ALERTS ── */
+.alert{padding:.75rem 1rem;border-radius:var(--r-sm);font-size:.86rem;display:flex;align-items:flex-start;gap:8px;margin-bottom:1rem}
+.alert svg{width:18px;height:18px;flex-shrink:0;margin-top:1px}
+.a-success{background:var(--green-l);color:#065f46;border:1px solid var(--green-m)}
+.a-danger{background:var(--red-l);color:#991b1b;border:1px solid var(--red-m)}
+.a-info{background:var(--blue-l);color:#1e40af;border:1px solid var(--blue-m)}
+.a-warning{background:var(--amber-l);color:#92400e;border:1px solid var(--amber-m)}
+
+/* ── LAYOUT ── */
+#screen-app{display:flex!important;min-height:100vh}
+.sidebar{width:248px;background:#0f1923;flex-shrink:0;display:flex;flex-direction:column;position:fixed;top:0;left:0;bottom:0;z-index:200;transition:transform .25s cubic-bezier(.4,0,.2,1)}
+.sb-logo{display:flex;align-items:center;gap:10px;padding:1.25rem;border-bottom:1px solid rgba(255,255,255,.07);flex-shrink:0}
+.sb-logo-icon{width:36px;height:36px;background:var(--blue);border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.sb-logo-icon svg{width:20px;height:20px;fill:white}
+.sb-logo-name{font-size:.95rem;font-weight:800;color:white;letter-spacing:-.2px}
+.sb-logo-sub{font-size:.62rem;color:#64748b;letter-spacing:.05em;text-transform:uppercase}
+.sb-scroll{flex:1;overflow-y:auto;padding:.5rem 0}
+.sb-sec{padding:.5rem 1rem .25rem;font-size:.62rem;font-weight:800;color:#475569;letter-spacing:.1em;text-transform:uppercase}
+.sb-item{display:flex;align-items:center;gap:10px;padding:.58rem 1rem;color:#94a3b8;font-size:.85rem;font-weight:600;cursor:pointer;transition:all .15s;border-left:3px solid transparent;margin:1px 0}
+.sb-item svg{width:17px;height:17px;flex-shrink:0}
+.sb-item:hover{background:rgba(255,255,255,.05);color:#cbd5e1}
+.sb-item.act{background:rgba(37,99,235,.18);color:white;border-left-color:var(--blue)}
+.sb-footer{padding:1rem;border-top:1px solid rgba(255,255,255,.07);flex-shrink:0}
+.sb-user{display:flex;align-items:center;gap:10px}
+.sb-avatar{width:34px;height:34px;border-radius:50%;background:var(--blue);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.8rem;color:white;flex-shrink:0}
+.sb-uname{font-size:.83rem;font-weight:700;color:white}
+.sb-urole{font-size:.68rem;color:#64748b}
+.sb-logout{margin-left:auto;background:none;border:none;color:#475569;padding:6px;border-radius:4px;display:flex}
+.sb-logout:hover{color:#f87171}
+
+.topbar{display:none;height:56px;background:#0f1923;align-items:center;padding:0 1rem;gap:12px;position:sticky;top:0;z-index:100}
+.menu-btn{background:none;border:none;color:#94a3b8;padding:6px;display:flex;border-radius:4px}
+.menu-btn:hover{color:white}
+.topbar-brand{font-size:.95rem;font-weight:800;color:white;letter-spacing:-.2px}
+.sb-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:199}
+
+.main{flex:1;margin-left:248px;min-height:100vh;padding:1.75rem}
+.page{display:none}
+.page.on{display:block}
+.ph{margin-bottom:1.5rem}
+.ph-top{display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap}
+.ph-title{font-size:1.4rem;font-weight:800;color:var(--ink);letter-spacing:-.3px}
+.ph-sub{font-size:.85rem;color:var(--ink4);margin-top:.2rem}
+
+/* ── CARDS ── */
+.card{background:var(--surface);border-radius:var(--r);box-shadow:var(--sh);padding:1.5rem}
+.card+.card{margin-top:1rem}
+.card-title{font-size:.95rem;font-weight:800;color:var(--ink);margin-bottom:1.1rem;letter-spacing:-.1px}
+
+/* ── STATS ── */
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:1rem;margin-bottom:1.5rem}
+.stat{background:var(--surface);border-radius:var(--r);box-shadow:var(--sh);padding:1.25rem;display:flex;gap:12px;align-items:flex-start}
+.stat-ic{width:42px;height:42px;border-radius:9px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.stat-ic svg{width:21px;height:21px}
+.stat-lbl{font-size:.72rem;font-weight:700;color:var(--ink4);letter-spacing:.02em;text-transform:uppercase}
+.stat-val{font-size:1.65rem;font-weight:800;color:var(--ink);line-height:1.05;letter-spacing:-.5px}
+
+/* ── CHECKIN HERO ── */
+.ci-hero{background:linear-gradient(135deg,#1e3a5f 0%,#2563eb 100%);border-radius:var(--r);padding:2rem;color:white;margin-bottom:1.5rem;position:relative;overflow:hidden}
+.ci-hero::before{content:'';position:absolute;right:-40px;top:-40px;width:180px;height:180px;border-radius:50%;background:rgba(255,255,255,.04)}
+.ci-hero::after{content:'';position:absolute;right:40px;bottom:-60px;width:140px;height:140px;border-radius:50%;background:rgba(255,255,255,.03)}
+.ci-clock{font-size:2.8rem;font-weight:800;letter-spacing:-2px;font-variant-numeric:tabular-nums;line-height:1;position:relative}
+.ci-date{font-size:.85rem;opacity:.75;margin-top:.3rem;position:relative}
+.ci-status{display:inline-flex;align-items:center;gap:6px;margin-top:1rem;padding:.35rem .85rem;border-radius:20px;font-size:.78rem;font-weight:700;position:relative}
+.ci-in{background:rgba(255,255,255,.18)}
+.ci-out{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2)}
+.ci-actions{display:flex;gap:.75rem;margin-top:1.5rem;position:relative;flex-wrap:wrap}
+.btn-ci{background:white;color:var(--blue);font-weight:800;font-size:.95rem;padding:.72rem 1.75rem;border-radius:var(--r-sm);border:none}
+.btn-ci:hover{background:#f0f7ff}
+.btn-co{background:rgba(255,255,255,.12);color:white;font-weight:700;font-size:.95rem;padding:.72rem 1.75rem;border-radius:var(--r-sm);border:1.5px solid rgba(255,255,255,.3)}
+.btn-co:hover{background:rgba(255,255,255,.2)}
+.ci-loc{font-size:.75rem;opacity:.65;margin-top:.75rem;position:relative;display:flex;align-items:center;gap:5px}
+
+/* ── HOLIDAY BANNER ── */
+.hol-banner{background:linear-gradient(135deg,#b45309,#d97706);border-radius:var(--r);padding:1.1rem 1.5rem;color:white;display:flex;align-items:center;gap:12px;margin-bottom:1.25rem}
+.hol-banner svg{width:24px;height:24px;fill:white;flex-shrink:0}
+
+/* ── TABLES ── */
+.tbl-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+table{width:100%;border-collapse:collapse;font-size:.855rem}
+thead th{padding:.6rem 1rem;text-align:left;font-size:.7rem;font-weight:800;color:var(--ink4);text-transform:uppercase;letter-spacing:.06em;background:var(--bg);border-bottom:1.5px solid var(--line)}
+tbody td{padding:.75rem 1rem;border-bottom:1px solid var(--line2);color:var(--ink2);vertical-align:middle}
+tbody tr:hover td{background:var(--bg)}
+tbody tr:last-child td{border-bottom:none}
+
+/* ── BADGES ── */
+.badge{display:inline-flex;align-items:center;padding:.18rem .6rem;border-radius:20px;font-size:.72rem;font-weight:700;white-space:nowrap}
+.b-success{background:var(--green-l);color:#065f46}
+.b-danger{background:var(--red-l);color:#991b1b}
+.b-warning{background:var(--amber-l);color:#92400e}
+.b-info{background:var(--blue-l);color:#1e40af}
+.b-gray{background:var(--line2);color:var(--ink3)}
+
+/* ── MODAL ── */
+.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:400;display:flex;align-items:center;justify-content:center;padding:1rem;opacity:0;pointer-events:none;transition:opacity .2s}
+.modal-bg.open{opacity:1;pointer-events:all}
+.modal{background:var(--surface);border-radius:var(--r-lg);width:100%;max-width:520px;max-height:90vh;overflow-y:auto;box-shadow:var(--sh-lg);transform:translateY(10px);transition:transform .2s}
+.modal-bg.open .modal{transform:translateY(0)}
+.modal-hd{padding:1.25rem 1.5rem;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:var(--surface);z-index:1}
+.modal-title{font-size:1rem;font-weight:800;color:var(--ink)}
+.modal-close{background:none;border:none;color:var(--ink4);font-size:1.2rem;padding:4px;border-radius:4px;display:flex;line-height:1}
+.modal-close:hover{background:var(--bg);color:var(--ink)}
+.modal-body{padding:1.5rem}
+.modal-ft{padding:1rem 1.5rem;border-top:1px solid var(--line);display:flex;gap:.75rem;justify-content:flex-end}
+
+/* ── MISC ── */
+.divider{height:1px;background:var(--line);margin:1.25rem 0}
+.empty{text-align:center;padding:3rem 1rem;color:var(--ink4)}
+.empty svg{width:44px;height:44px;fill:var(--line);margin:0 auto .75rem;display:block}
+.empty p{font-size:.875rem}
+.flex-gap{display:flex;gap:.5rem;flex-wrap:wrap;align-items:center}
+.text-sm{font-size:.8rem}
+.text-muted{color:var(--ink4)}
+.fw7{font-weight:700}
+.mt1{margin-top:.5rem}
+.mt2{margin-top:1rem}
+.mb1{margin-bottom:.5rem}
+.mb2{margin-bottom:1rem}
+code.tag{background:var(--bg);border:1px solid var(--line);border-radius:4px;padding:1px 6px;font-size:.78rem;font-family:monospace}
+
+/* ── FIRST RUN SETUP ── */
+.setup-progress{margin-bottom:1.5rem}
+.progress-bar{height:4px;background:var(--line);border-radius:2px;overflow:hidden}
+.progress-fill{height:100%;background:var(--blue);border-radius:2px;transition:width .4s}
+.progress-label{font-size:.75rem;color:var(--ink4);margin-top:.4rem}
+
+/* ── EMAILJS SETUP PANEL ── */
+.ejs-panel{background:linear-gradient(135deg,#eff6ff,#f0fdf4);border:1.5px solid var(--blue-m);border-radius:var(--r);padding:1.25rem;margin-bottom:1.25rem}
+.ejs-status{display:flex;align-items:center;gap:8px;font-size:.85rem;font-weight:700}
+.ejs-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0}
+.ejs-dot.ok{background:var(--green)}
+.ejs-dot.no{background:var(--red)}
+.ejs-dot.partial{background:var(--amber)}
+
+/* ── RESPONSIVE ── */
+@media(max-width:768px){
+  .sidebar{transform:translateX(-100%)}
+  .sidebar.open{transform:translateX(0)}
+  .sb-overlay.open{display:block}
+  .topbar{display:flex}
+  .main{margin-left:0;padding:1rem;padding-top:calc(56px + 1rem)}
+  .fg-row{grid-template-columns:1fr}
+  .ci-clock{font-size:2.2rem}
+  .stats-grid{grid-template-columns:1fr 1fr}
+  .auth-box{padding:1.75rem}
+  .modal{max-width:100%;margin:.5rem}
+}
+@media(max-width:420px){
+  .stats-grid{grid-template-columns:1fr}
+  .ci-clock{font-size:1.9rem}
+  .ci-actions{flex-direction:column}
+  .btn-ci,.btn-co{width:100%;text-align:center;justify-content:center}
+}
 </style>
 </head>
 <body>
 
-<!-- AUTH SCREEN -->
-<div id="auth-screen">
-  <div class="auth-card">
-    <div class="auth-logo">
-      <div class="auth-logo-icon">
-        <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+<!-- ══════════════════════════════════════════
+     SCREEN 1 — FIRST-RUN ADMIN SETUP
+══════════════════════════════════════════ -->
+<div id="screen-setup" class="screen on">
+  <div class="auth-box">
+    <div class="auth-brand">
+      <div class="brand-icon"><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg></div>
+      <div><div class="brand-name">AttendTrack</div><div class="brand-tagline">Attendance Management</div></div>
+    </div>
+
+    <!-- Step indicator -->
+    <div id="setup-step-dots" class="setup-steps">
+      <div class="step-dot active" id="dot0"></div>
+      <div class="step-dot" id="dot1"></div>
+      <div class="step-dot" id="dot2"></div>
+    </div>
+
+    <!-- Step 0: Welcome -->
+    <div id="setup-s0">
+      <div class="auth-heading">Welcome to AttendTrack</div>
+      <div class="auth-sub">Let's set up your administrator account in a few quick steps. This only happens once.</div>
+      <div class="alert a-info">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+        <span>Your credentials will be stored only in this browser. Keep them safe — no one else can recover them.</span>
       </div>
-      <div>
-        <div class="auth-logo-text">AttendTrack</div>
-        <div class="auth-logo-sub">Employee Attendance System</div>
+      <button class="btn btn-primary btn-full btn-lg" onclick="setupNext(1)">Get Started →</button>
+    </div>
+
+    <!-- Step 1: Admin credentials -->
+    <div id="setup-s1" style="display:none">
+      <div class="auth-heading">Create your admin account</div>
+      <div class="auth-sub">Choose a username and a strong password.</div>
+      <div id="setup-s1-alert"></div>
+      <div class="fg">
+        <label>Full Name</label>
+        <input type="text" id="s-admin-name" placeholder="Your full name" autocomplete="name">
       </div>
+      <div class="fg">
+        <label>Username</label>
+        <input type="text" id="s-admin-user" placeholder="admin username" autocomplete="username">
+      </div>
+      <div class="fg">
+        <label>Password</label>
+        <div class="input-eye">
+          <input type="password" id="s-admin-pass" placeholder="Strong password" autocomplete="new-password">
+          <button class="eye-btn" type="button" onclick="toggleEye('s-admin-pass',this)"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg></button>
+        </div>
+      </div>
+      <div class="fg">
+        <label>Confirm Password</label>
+        <div class="input-eye">
+          <input type="password" id="s-admin-pass2" placeholder="Repeat password" autocomplete="new-password">
+          <button class="eye-btn" type="button" onclick="toggleEye('s-admin-pass2',this)"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg></button>
+        </div>
+      </div>
+      <button class="btn btn-primary btn-full" onclick="setupStep1()">Continue →</button>
     </div>
-    <div class="auth-title">Sign in to your account</div>
-    <div class="auth-subtitle">Enter your credentials to access the system</div>
-    <div id="login-alert"></div>
-    <div class="form-group">
-      <label>Username</label>
-      <input type="text" id="login-user" placeholder="Enter username">
-    </div>
-    <div class="form-group">
-      <label>Password</label>
-      <input type="password" id="login-pass" placeholder="Enter password" onkeydown="if(event.key==='Enter')login()">
-    </div>
-    <button class="btn btn-primary btn-full" onclick="login()">Sign In</button>
-    <div style="margin-top:1.25rem; padding: 1rem; background: var(--gray-50); border-radius: var(--radius-sm); font-size: 0.8rem; color: var(--gray-600);">
-      <strong>Demo credentials:</strong><br>
-      Admin: <code>admin</code> / <code>admin123</code><br>
-      Employee: Created by admin
+
+    <!-- Step 2: EmailJS setup -->
+    <div id="setup-s2" style="display:none">
+      <div class="auth-heading">Email notifications</div>
+      <div class="auth-sub">Connect EmailJS to receive check-in alerts and send employees their login details.</div>
+      <div id="setup-s2-alert"></div>
+      <div class="alert a-info" style="margin-bottom:1.1rem">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+        <div>Create a free account at <a href="https://emailjs.com" target="_blank" rel="noopener">emailjs.com</a>. Add an email service, create a template with variables <code class="tag">{{to_email}}</code> <code class="tag">{{subject}}</code> <code class="tag">{{message}}</code>, then paste your IDs below.</div>
+      </div>
+      <div class="fg">
+        <label>Your Admin Email (receives all notifications)</label>
+        <input type="email" id="s-admin-email" value="abdulhannankhan56@yahoo.com">
+      </div>
+      <div class="fg">
+        <label>EmailJS Public Key</label>
+        <input type="text" id="s-ejs-key" placeholder="e.g. abc123XYZ_...">
+      </div>
+      <div class="fg">
+        <label>EmailJS Service ID</label>
+        <input type="text" id="s-ejs-svc" placeholder="service_xxxxxxx">
+      </div>
+      <div class="fg">
+        <label>EmailJS Template ID</label>
+        <input type="text" id="s-ejs-tpl" placeholder="template_xxxxxxx">
+        <div class="fg-hint">You can skip EmailJS for now and configure it later in Admin → Settings.</div>
+      </div>
+      <div style="display:flex;gap:.75rem;flex-wrap:wrap">
+        <button class="btn btn-ghost" onclick="setupFinish(false)">Skip for now</button>
+        <button class="btn btn-primary" style="flex:1" onclick="setupFinish(true)">Finish Setup →</button>
+      </div>
     </div>
   </div>
 </div>
 
-<!-- MAIN APP -->
-<div id="app">
+<!-- ══════════════════════════════════════════
+     SCREEN 2 — LOGIN
+══════════════════════════════════════════ -->
+<div id="screen-login" class="screen">
+  <div class="auth-box">
+    <div class="auth-brand">
+      <div class="brand-icon"><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg></div>
+      <div><div class="brand-name">AttendTrack</div><div class="brand-tagline">Attendance Management</div></div>
+    </div>
+    <div class="auth-heading">Sign in</div>
+    <div class="auth-sub">Enter your credentials to continue</div>
+    <div id="login-alert"></div>
+    <div class="fg">
+      <label>Username</label>
+      <input type="text" id="l-user" placeholder="Username" autocomplete="username">
+    </div>
+    <div class="fg">
+      <label>Password</label>
+      <div class="input-eye">
+        <input type="password" id="l-pass" placeholder="Password" autocomplete="current-password" onkeydown="if(event.key==='Enter')doLogin()">
+        <button class="eye-btn" type="button" onclick="toggleEye('l-pass',this)"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg></button>
+      </div>
+    </div>
+    <button class="btn btn-primary btn-full btn-lg" onclick="doLogin()">Sign In</button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     SCREEN 3 — APP
+══════════════════════════════════════════ -->
+<div id="screen-app" class="screen" style="display:none!important">
+
+  <!-- Mobile top bar -->
+  <div class="topbar">
+    <button class="menu-btn" onclick="toggleSidebar()">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg>
+    </button>
+    <div class="topbar-brand">AttendTrack</div>
+  </div>
+
   <!-- Sidebar -->
-  <div class="sidebar">
-    <div class="sidebar-logo">
-      <div class="sidebar-logo-icon">
-        <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
-      </div>
-      <div>
-        <div class="sidebar-logo-text">AttendTrack</div>
-        <div class="sidebar-logo-sub">Attendance System</div>
-      </div>
+  <div class="sidebar" id="sidebar">
+    <div class="sb-logo">
+      <div class="sb-logo-icon"><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg></div>
+      <div><div class="sb-logo-name">AttendTrack</div><div class="sb-logo-sub">Attendance</div></div>
     </div>
+    <div class="sb-scroll">
 
-    <!-- Employee Nav -->
-    <div id="emp-nav">
-      <div class="nav-section">Employee</div>
-      <div class="nav-item active" onclick="showPage('emp-dashboard')">
-        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/></svg>
-        Dashboard
-      </div>
-      <div class="nav-item" onclick="showPage('emp-attendance')">
-        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17 12h-5v5h5v-5zM16 1v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2h-1V1h-2zm3 18H5V8h14v11z"/></svg>
-        My Attendance
-      </div>
-      <div class="nav-item" onclick="showPage('emp-leave')">
-        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm6 13H6v-1c0-2 4-3.1 6-3.1s6 1.1 6 3.1v1z"/></svg>
-        Leave Requests
-      </div>
-    </div>
-
-    <!-- Admin Nav -->
-    <div id="admin-nav" class="hidden">
-      <div class="nav-section">Admin Panel</div>
-      <div class="nav-item" onclick="showPage('admin-dashboard')">
-        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/></svg>
-        Overview
-      </div>
-      <div class="nav-item" onclick="showPage('admin-employees')">
-        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
-        Employees
-      </div>
-      <div class="nav-item" onclick="showPage('admin-attendance')">
-        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17 12h-5v5h5v-5zM16 1v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2h-1V1h-2zm3 18H5V8h14v11z"/></svg>
-        Attendance Records
-      </div>
-      <div class="nav-item" onclick="showPage('admin-leave')">
-        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M14 6l-1-2H5v17h2v-7h5l1 2h7V6h-6zm4 8h-4l-1-2H7V6h5l1 2h5v6z"/></svg>
-        Leave Requests
-      </div>
-      <div class="nav-item" onclick="showPage('admin-holidays')">
-        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67V7z"/></svg>
-        Holidays
-      </div>
-      <div class="nav-item" onclick="showPage('admin-settings')">
-        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg>
-        Settings
-      </div>
-    </div>
-
-    <div style="height: 60px;"></div>
-    <div class="sidebar-footer">
-      <div class="user-info">
-        <div class="user-avatar" id="sidebar-avatar">A</div>
-        <div>
-          <div class="user-name" id="sidebar-name">Admin</div>
-          <div class="user-role" id="sidebar-role">Administrator</div>
+      <!-- Employee nav -->
+      <div id="nav-emp">
+        <div class="sb-sec">Employee</div>
+        <div class="sb-item act" data-page="e-dash" onclick="goPage('e-dash')">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/></svg>
+          Dashboard
         </div>
-        <button class="logout-btn" onclick="logout()" title="Sign out">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"/></svg>
+        <div class="sb-item" data-page="e-att" onclick="goPage('e-att')">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17 12h-5v5h5v-5zM16 1v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2h-1V1h-2zm3 18H5V8h14v11z"/></svg>
+          My Attendance
+        </div>
+        <div class="sb-item" data-page="e-leave" onclick="goPage('e-leave')">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M14 6l-1-2H5v17h2v-7h5l1 2h7V6h-6zm4 8h-4l-1-2H7V6h5l1 2h5v6z"/></svg>
+          Leave Requests
+        </div>
+      </div>
+
+      <!-- Admin nav -->
+      <div id="nav-adm" style="display:none">
+        <div class="sb-sec">Administrator</div>
+        <div class="sb-item act" data-page="a-dash" onclick="goPage('a-dash')">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/></svg>
+          Overview
+        </div>
+        <div class="sb-item" data-page="a-emp" onclick="goPage('a-emp')">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
+          Employees
+        </div>
+        <div class="sb-item" data-page="a-att" onclick="goPage('a-att')">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17 12h-5v5h5v-5zM16 1v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2h-1V1h-2zm3 18H5V8h14v11z"/></svg>
+          Attendance Records
+        </div>
+        <div class="sb-item" data-page="a-leave" onclick="goPage('a-leave')">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M14 6l-1-2H5v17h2v-7h5l1 2h7V6h-6zm4 8h-4l-1-2H7V6h5l1 2h5v6z"/></svg>
+          Leave Requests
+        </div>
+        <div class="sb-item" data-page="a-hol" onclick="goPage('a-hol')">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67V7z"/></svg>
+          Holidays
+        </div>
+        <div class="sb-item" data-page="a-settings" onclick="goPage('a-settings')">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg>
+          Settings
+        </div>
+      </div>
+
+    </div>
+    <div class="sb-footer">
+      <div class="sb-user">
+        <div class="sb-avatar" id="sb-av">A</div>
+        <div>
+          <div class="sb-uname" id="sb-nm">—</div>
+          <div class="sb-urole" id="sb-rl">—</div>
+        </div>
+        <button class="sb-logout" onclick="doLogout()" title="Sign out">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor"><path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"/></svg>
         </button>
       </div>
     </div>
   </div>
 
-  <!-- Main Content -->
+  <div class="sb-overlay" id="sb-overlay" onclick="closeSidebar()"></div>
+
+  <!-- ── MAIN ── -->
   <div class="main">
 
-    <!-- ===== EMPLOYEE DASHBOARD ===== -->
-    <div class="page active" id="emp-dashboard">
-      <div class="page-header">
-        <div class="page-title" id="emp-greeting">Good morning!</div>
-        <div class="page-subtitle">Here's your attendance summary for today</div>
+    <!-- ────── EMPLOYEE: DASHBOARD ────── -->
+    <div class="page on" id="e-dash">
+      <div class="ph">
+        <div class="ph-title" id="e-greeting">Good morning</div>
+        <div class="ph-sub">Your attendance summary</div>
       </div>
-      <div id="holiday-banner-emp"></div>
-      <div class="checkin-card">
-        <div class="checkin-time" id="live-clock">--:--:--</div>
-        <div class="checkin-date" id="live-date"></div>
-        <div id="checkin-status-badge" class="checkin-status status-not-checked">● Not checked in yet</div>
-        <div class="checkin-actions">
-          <button class="btn btn-checkin" id="btn-checkin" onclick="checkIn()">Check In</button>
-          <button class="btn btn-checkout hidden" id="btn-checkout" onclick="checkOut()">Check Out</button>
+      <div id="e-hol-banner"></div>
+      <div class="ci-hero">
+        <div class="ci-clock" id="ci-clock">--:--:--</div>
+        <div class="ci-date" id="ci-date"></div>
+        <div class="ci-status ci-out" id="ci-status-badge">● Not checked in</div>
+        <div class="ci-actions">
+          <button class="btn btn-ci" id="btn-ci" onclick="doCheckIn()">Check In</button>
+          <button class="btn btn-co" id="btn-co" style="display:none" onclick="doCheckOut()">Check Out</button>
         </div>
-        <div id="location-display" class="mt-1" style="font-size:0.78rem; opacity:0.8;"></div>
+        <div class="ci-loc" id="ci-loc"></div>
       </div>
-      <div id="today-info" class="card hidden">
-        <div class="card-title mb-1">Today's Activity</div>
-        <table>
-          <tbody>
-            <tr><td style="color:var(--gray-500); width:140px;">Check-in time</td><td id="td-checkin" class="fw-600"></td></tr>
-            <tr><td style="color:var(--gray-500);">Check-out time</td><td id="td-checkout" class="fw-600"></td></tr>
-            <tr><td style="color:var(--gray-500);">Status</td><td id="td-status"></td></tr>
-            <tr><td style="color:var(--gray-500);">Location</td><td id="td-location" class="text-sm"></td></tr>
-          </tbody>
-        </table>
+      <div class="card" id="e-today-card" style="display:none;margin-bottom:1rem">
+        <div class="card-title">Today's record</div>
+        <table><tbody>
+          <tr><td style="color:var(--ink4);width:130px">Check-in</td><td id="td-ci" class="fw7"></td></tr>
+          <tr><td style="color:var(--ink4)">Check-out</td><td id="td-co" class="fw7"></td></tr>
+          <tr><td style="color:var(--ink4)">Status</td><td id="td-st"></td></tr>
+          <tr><td style="color:var(--ink4)">Location</td><td id="td-loc" class="text-sm"></td></tr>
+        </tbody></table>
       </div>
-      <div class="stats-grid mt-2">
-        <div class="stat-card">
-          <div class="stat-icon" style="background:#e8f0fe;"><svg viewBox="0 0 24 24" fill="#1a56db"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg></div>
-          <div><div class="stat-label">Present This Month</div><div class="stat-value" id="stat-present">0</div></div>
+      <div class="stats-grid">
+        <div class="stat">
+          <div class="stat-ic" style="background:var(--blue-l)"><svg viewBox="0 0 24 24" fill="var(--blue)"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg></div>
+          <div><div class="stat-lbl">Present (month)</div><div class="stat-val" id="es-present">0</div></div>
         </div>
-        <div class="stat-card">
-          <div class="stat-icon" style="background:#fdf2f2;"><svg viewBox="0 0 24 24" fill="#e02424"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg></div>
-          <div><div class="stat-label">Absent This Month</div><div class="stat-value" id="stat-absent">0</div></div>
+        <div class="stat">
+          <div class="stat-ic" style="background:var(--red-l)"><svg viewBox="0 0 24 24" fill="var(--red)"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg></div>
+          <div><div class="stat-lbl">Absent (month)</div><div class="stat-val" id="es-absent">0</div></div>
         </div>
-        <div class="stat-card">
-          <div class="stat-icon" style="background:#fef3c7;"><svg viewBox="0 0 24 24" fill="#c27803"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg></div>
-          <div><div class="stat-label">Late Arrivals</div><div class="stat-value" id="stat-late">0</div></div>
+        <div class="stat">
+          <div class="stat-ic" style="background:var(--amber-l)"><svg viewBox="0 0 24 24" fill="var(--amber)"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg></div>
+          <div><div class="stat-lbl">Late arrivals</div><div class="stat-val" id="es-late">0</div></div>
         </div>
-        <div class="stat-card">
-          <div class="stat-icon" style="background:#e6f9f0;"><svg viewBox="0 0 24 24" fill="#0e9f6e"><path d="M14 6l-1-2H5v17h2v-7h5l1 2h7V6h-6z"/></svg></div>
-          <div><div class="stat-label">Leave Days Used</div><div class="stat-value" id="stat-leave-used">0</div></div>
+        <div class="stat">
+          <div class="stat-ic" style="background:var(--green-l)"><svg viewBox="0 0 24 24" fill="var(--green)"><path d="M14 6l-1-2H5v17h2v-7h5l1 2h7V6h-6z"/></svg></div>
+          <div><div class="stat-lbl">Leave taken</div><div class="stat-val" id="es-leave">0</div></div>
         </div>
       </div>
     </div>
 
-    <!-- ===== EMPLOYEE ATTENDANCE ===== -->
-    <div class="page" id="emp-attendance">
-      <div class="page-header"><div class="page-title">My Attendance</div><div class="page-subtitle">Your attendance history</div></div>
-      <div class="card">
-        <div id="emp-att-table"><div class="empty-state"><svg viewBox="0 0 24 24"><path d="M17 12h-5v5h5v-5zM16 1v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2h-1V1h-2zm3 18H5V8h14v11z"/></svg>No attendance records yet.</div></div>
-      </div>
+    <!-- ────── EMPLOYEE: ATTENDANCE ────── -->
+    <div class="page" id="e-att">
+      <div class="ph"><div class="ph-title">My Attendance</div><div class="ph-sub">Your check-in history</div></div>
+      <div class="card"><div id="e-att-body"></div></div>
     </div>
 
-    <!-- ===== EMPLOYEE LEAVE ===== -->
-    <div class="page" id="emp-leave">
-      <div class="page-header">
-        <div class="page-title">Leave Requests</div>
-        <div class="page-subtitle">Submit and track your leave applications</div>
-      </div>
-      <div class="card" style="margin-bottom:1.5rem;">
-        <div class="card-title mb-1" style="margin-bottom:1rem;">Submit a Leave Request</div>
-        <div id="leave-submit-alert"></div>
-        <div class="form-row">
-          <div class="form-group"><label>From Date</label><input type="date" id="leave-from"></div>
-          <div class="form-group"><label>To Date</label><input type="date" id="leave-to"></div>
+    <!-- ────── EMPLOYEE: LEAVE ────── -->
+    <div class="page" id="e-leave">
+      <div class="ph"><div class="ph-title">Leave Requests</div><div class="ph-sub">Submit and track leave applications</div></div>
+      <div class="card mb2">
+        <div class="card-title">New leave request</div>
+        <div id="e-leave-alert"></div>
+        <div class="fg-row">
+          <div class="fg"><label>From</label><input type="date" id="lv-from"></div>
+          <div class="fg"><label>To</label><input type="date" id="lv-to"></div>
         </div>
-        <div class="form-group"><label>Leave Type</label>
-          <select id="leave-type">
-            <option>Sick Leave</option><option>Casual Leave</option><option>Annual Leave</option><option>Emergency Leave</option><option>Other</option>
-          </select>
+        <div class="fg"><label>Type</label>
+          <select id="lv-type"><option>Sick Leave</option><option>Casual Leave</option><option>Annual Leave</option><option>Emergency Leave</option><option>Other</option></select>
         </div>
-        <div class="form-group"><label>Reason</label><textarea id="leave-reason" placeholder="Briefly describe the reason for your leave..."></textarea></div>
+        <div class="fg"><label>Reason</label><textarea id="lv-reason" placeholder="Describe the reason…"></textarea></div>
         <button class="btn btn-primary" onclick="submitLeave()">Submit Request</button>
       </div>
-      <div class="card">
-        <div class="card-title" style="margin-bottom:1rem;">My Leave History</div>
-        <div id="emp-leave-table"><div class="empty-state"><svg viewBox="0 0 24 24"><path d="M14 6l-1-2H5v17h2v-7h5l1 2h7V6h-6zm4 8h-4l-1-2H7V6h5l1 2h5v6z"/></svg>No leave requests yet.</div></div>
-      </div>
+      <div class="card"><div class="card-title">My requests</div><div id="e-leave-body"></div></div>
     </div>
 
-    <!-- ===== ADMIN DASHBOARD ===== -->
-    <div class="page" id="admin-dashboard">
-      <div class="page-header"><div class="page-title">Admin Overview</div><div class="page-subtitle">System-wide attendance summary</div></div>
-      <div id="holiday-banner-admin"></div>
+    <!-- ────── ADMIN: OVERVIEW ────── -->
+    <div class="page" id="a-dash">
+      <div class="ph"><div class="ph-title">Admin Overview</div><div class="ph-sub">System-wide activity</div></div>
+      <div id="a-hol-banner"></div>
       <div class="stats-grid">
-        <div class="stat-card">
-          <div class="stat-icon" style="background:#e8f0fe;"><svg viewBox="0 0 24 24" fill="#1a56db"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg></div>
-          <div><div class="stat-label">Total Employees</div><div class="stat-value" id="adm-total-emp">0</div></div>
+        <div class="stat">
+          <div class="stat-ic" style="background:var(--blue-l)"><svg viewBox="0 0 24 24" fill="var(--blue)"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg></div>
+          <div><div class="stat-lbl">Total employees</div><div class="stat-val" id="as-emps">0</div></div>
         </div>
-        <div class="stat-card">
-          <div class="stat-icon" style="background:#e6f9f0;"><svg viewBox="0 0 24 24" fill="#0e9f6e"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg></div>
-          <div><div class="stat-label">Checked In Today</div><div class="stat-value" id="adm-checked-today">0</div></div>
+        <div class="stat">
+          <div class="stat-ic" style="background:var(--green-l)"><svg viewBox="0 0 24 24" fill="var(--green)"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg></div>
+          <div><div class="stat-lbl">Checked in today</div><div class="stat-val" id="as-today">0</div></div>
         </div>
-        <div class="stat-card">
-          <div class="stat-icon" style="background:#fef3c7;"><svg viewBox="0 0 24 24" fill="#c27803"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg></div>
-          <div><div class="stat-label">Late Today</div><div class="stat-value" id="adm-late-today">0</div></div>
+        <div class="stat">
+          <div class="stat-ic" style="background:var(--amber-l)"><svg viewBox="0 0 24 24" fill="var(--amber)"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg></div>
+          <div><div class="stat-lbl">Late today</div><div class="stat-val" id="as-late">0</div></div>
         </div>
-        <div class="stat-card">
-          <div class="stat-icon" style="background:#fdf2f2;"><svg viewBox="0 0 24 24" fill="#e02424"><path d="M14 6l-1-2H5v17h2v-7h5l1 2h7V6h-6zm4 8h-4l-1-2H7V6h5l1 2h5v6z"/></svg></div>
-          <div><div class="stat-label">Pending Leave Requests</div><div class="stat-value" id="adm-pending-leave">0</div></div>
+        <div class="stat">
+          <div class="stat-ic" style="background:var(--red-l)"><svg viewBox="0 0 24 24" fill="var(--red)"><path d="M14 6l-1-2H5v17h2v-7h5l1 2h7V6h-6z"/></svg></div>
+          <div><div class="stat-lbl">Pending leave</div><div class="stat-val" id="as-leave">0</div></div>
         </div>
       </div>
-      <div class="card">
-        <div class="card-header"><div class="card-title">Today's Check-in Activity</div></div>
-        <div id="today-activity-table"><div class="empty-state">No activity today.</div></div>
-      </div>
+      <div class="card"><div class="card-title">Today's activity</div><div id="a-today-body"></div></div>
     </div>
 
-    <!-- ===== ADMIN EMPLOYEES ===== -->
-    <div class="page" id="admin-employees">
-      <div class="page-header">
-        <div style="display:flex; align-items:center; justify-content:space-between;">
-          <div><div class="page-title">Employees</div><div class="page-subtitle">Manage employee accounts</div></div>
-          <button class="btn btn-primary" onclick="openAddEmployeeModal()">
+    <!-- ────── ADMIN: EMPLOYEES ────── -->
+    <div class="page" id="a-emp">
+      <div class="ph">
+        <div class="ph-top">
+          <div><div class="ph-title">Employees</div><div class="ph-sub">Create and manage accounts</div></div>
+          <button class="btn btn-primary" onclick="openAddEmp()">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
             Add Employee
           </button>
         </div>
       </div>
-      <div class="card">
-        <div id="employees-table"><div class="empty-state">No employees yet. Add one to get started.</div></div>
-      </div>
+      <div class="card"><div id="a-emp-body"></div></div>
     </div>
 
-    <!-- ===== ADMIN ATTENDANCE ===== -->
-    <div class="page" id="admin-attendance">
-      <div class="page-header"><div class="page-title">Attendance Records</div><div class="page-subtitle">All employee check-in/check-out logs</div></div>
-      <div class="card" style="margin-bottom:1rem;">
-        <div style="display:flex; gap:1rem; align-items:flex-end; flex-wrap:wrap;">
-          <div class="form-group" style="margin:0;"><label>Filter by Employee</label>
-            <select id="filter-emp" onchange="renderAdminAttendance()" style="width:180px;">
-              <option value="">All Employees</option>
-            </select>
+    <!-- ────── ADMIN: ATTENDANCE ────── -->
+    <div class="page" id="a-att">
+      <div class="ph"><div class="ph-title">Attendance Records</div><div class="ph-sub">All check-in/out logs</div></div>
+      <div class="card mb2">
+        <div style="display:flex;gap:1rem;flex-wrap:wrap;align-items:flex-end">
+          <div class="fg" style="margin:0;flex:1;min-width:130px"><label>Employee</label>
+            <select id="f-emp" onchange="renderAAdminAtt()"><option value="">All</option></select>
           </div>
-          <div class="form-group" style="margin:0;"><label>From Date</label><input type="date" id="filter-from" onchange="renderAdminAttendance()" style="width:150px;"></div>
-          <div class="form-group" style="margin:0;"><label>To Date</label><input type="date" id="filter-to" onchange="renderAdminAttendance()" style="width:150px;"></div>
-          <button class="btn btn-outline btn-sm" onclick="clearFilters()">Clear</button>
+          <div class="fg" style="margin:0"><label>From</label><input type="date" id="f-from" onchange="renderAAdminAtt()" style="width:140px"></div>
+          <div class="fg" style="margin:0"><label>To</label><input type="date" id="f-to" onchange="renderAAdminAtt()" style="width:140px"></div>
+          <button class="btn btn-ghost btn-sm" onclick="clearAttFilters()">Clear</button>
         </div>
       </div>
-      <div class="card"><div id="admin-att-table"><div class="empty-state">No records yet.</div></div></div>
+      <div class="card"><div id="a-att-body"></div></div>
     </div>
 
-    <!-- ===== ADMIN LEAVE ===== -->
-    <div class="page" id="admin-leave">
-      <div class="page-header"><div class="page-title">Leave Requests</div><div class="page-subtitle">Approve or reject employee leave applications</div></div>
-      <div class="card"><div id="admin-leave-table"><div class="empty-state">No pending leave requests.</div></div></div>
+    <!-- ────── ADMIN: LEAVE ────── -->
+    <div class="page" id="a-leave">
+      <div class="ph"><div class="ph-title">Leave Requests</div><div class="ph-sub">Approve or reject employee leave</div></div>
+      <div class="card"><div id="a-leave-body"></div></div>
     </div>
 
-    <!-- ===== ADMIN HOLIDAYS ===== -->
-    <div class="page" id="admin-holidays">
-      <div class="page-header"><div class="page-title">Holiday Management</div><div class="page-subtitle">Declare and manage holidays for all employees</div></div>
-      <div class="card" style="margin-bottom:1.5rem;">
-        <div class="card-title" style="margin-bottom:1rem;">Declare a Holiday</div>
-        <div id="holiday-alert"></div>
-        <div class="form-row">
-          <div class="form-group"><label>Date</label><input type="date" id="holiday-date"></div>
-          <div class="form-group"><label>Holiday Name</label><input type="text" id="holiday-name" placeholder="e.g. Emergency Closure — Heavy Rain"></div>
+    <!-- ────── ADMIN: HOLIDAYS ────── -->
+    <div class="page" id="a-hol">
+      <div class="ph"><div class="ph-title">Holidays</div><div class="ph-sub">Declare holidays for all staff</div></div>
+      <div class="card mb2">
+        <div class="card-title">Declare a holiday</div>
+        <div id="hol-alert"></div>
+        <div class="fg-row">
+          <div class="fg"><label>Date</label><input type="date" id="h-date"></div>
+          <div class="fg"><label>Name / Reason</label><input type="text" id="h-name" placeholder="e.g. Emergency — Heavy rain"></div>
         </div>
-        <button class="btn btn-warning" onclick="declareHoliday()">
+        <button class="btn btn-warning" onclick="declareHol()">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
           Declare Holiday
         </button>
       </div>
-      <div class="card"><div id="holidays-list"><div class="empty-state">No holidays declared yet.</div></div></div>
+      <div class="card"><div id="a-hol-body"></div></div>
     </div>
 
-    <!-- ===== ADMIN SETTINGS ===== -->
-    <div class="page" id="admin-settings">
-      <div class="page-header"><div class="page-title">Settings</div><div class="page-subtitle">Configure system preferences and email notifications</div></div>
-      <div class="card" style="max-width:580px;">
-        <div class="card-title" style="margin-bottom:1.25rem;">Email Notification Settings</div>
+    <!-- ────── ADMIN: SETTINGS ────── -->
+    <div class="page" id="a-settings">
+      <div class="ph"><div class="ph-title">Settings</div><div class="ph-sub">Email notifications & preferences</div></div>
+      <div class="card" style="max-width:600px">
+        <div class="card-title">Email notifications (EmailJS)</div>
         <div id="settings-alert"></div>
-        <div class="alert alert-info">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
-          <span>This system uses <strong>EmailJS</strong> to send real email notifications. Set up your free account at <a href="https://emailjs.com" target="_blank" style="color:inherit;font-weight:600;">emailjs.com</a> and enter your credentials below.</span>
+        <div id="ejs-status-panel" class="ejs-panel mb2">
+          <div class="ejs-status"><div class="ejs-dot" id="ejs-dot"></div><span id="ejs-status-text">Checking…</span></div>
         </div>
-        <div class="form-group"><label>EmailJS Service ID</label><input type="text" id="ejs-service" placeholder="service_xxxxxxx"></div>
-        <div class="form-group"><label>EmailJS Template ID</label><input type="text" id="ejs-template" placeholder="template_xxxxxxx"></div>
-        <div class="form-group"><label>EmailJS Public Key</label><input type="text" id="ejs-key" placeholder="Your public key"></div>
+        <div class="alert a-info mb2">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+          <div>Set up at <a href="https://emailjs.com" target="_blank">emailjs.com</a>. Create an email service and a template. The template must use variables <code class="tag">{{to_email}}</code>, <code class="tag">{{subject}}</code>, <code class="tag">{{message}}</code>.</div>
+        </div>
+        <div class="fg"><label>Admin notification email</label><input type="email" id="cfg-email"></div>
+        <div class="fg"><label>EmailJS Public Key</label><input type="text" id="cfg-key" placeholder="Public key from EmailJS dashboard"></div>
+        <div class="fg"><label>EmailJS Service ID</label><input type="text" id="cfg-svc" placeholder="service_xxxxxxx"></div>
+        <div class="fg"><label>EmailJS Template ID</label><input type="text" id="cfg-tpl" placeholder="template_xxxxxxx"></div>
         <div class="divider"></div>
-        <div class="form-group"><label>Admin Notification Email</label><input type="email" id="admin-email" value="abdulhannankhan56@yahoo.com"></div>
-        <div class="form-group"><label>Late Check-in Threshold (24h format)</label><input type="text" id="late-threshold" value="09:30" placeholder="09:30"></div>
+        <div class="fg"><label>Late threshold (24h)</label><input type="text" id="cfg-late" placeholder="09:30"></div>
+        <div class="fg"><label>Website URL (included in employee welcome emails)</label><input type="text" id="cfg-url" placeholder="https://yoursite.com/attendance.html"></div>
         <button class="btn btn-primary" onclick="saveSettings()">Save Settings</button>
+        <button class="btn btn-ghost" style="margin-left:.5rem" onclick="testEmail()">Send Test Email</button>
       </div>
     </div>
 
   </div><!-- /main -->
-</div><!-- /app -->
+</div><!-- /screen-app -->
 
-<!-- ADD EMPLOYEE MODAL -->
-<div class="modal-backdrop hidden" id="modal-add-emp">
+<!-- ── ADD EMPLOYEE MODAL ── -->
+<div class="modal-bg" id="m-add-emp">
   <div class="modal">
-    <div class="modal-header">
-      <div class="modal-title">Add New Employee</div>
-      <button class="modal-close" onclick="closeModal('modal-add-emp')">✕</button>
-    </div>
+    <div class="modal-hd"><div class="modal-title">Add New Employee</div><button class="modal-close" onclick="closeModal('m-add-emp')">✕</button></div>
     <div class="modal-body">
-      <div id="modal-emp-alert"></div>
-      <div class="form-row">
-        <div class="form-group"><label>Full Name</label><input type="text" id="new-emp-name" placeholder="John Smith"></div>
-        <div class="form-group"><label>Username</label><input type="text" id="new-emp-user" placeholder="jsmith"></div>
+      <div id="m-emp-alert"></div>
+      <div class="fg-row">
+        <div class="fg"><label>Full Name</label><input type="text" id="ne-name" placeholder="Jane Smith"></div>
+        <div class="fg"><label>Username</label><input type="text" id="ne-user" placeholder="jsmith"></div>
       </div>
-      <div class="form-row">
-        <div class="form-group"><label>Password</label><input type="password" id="new-emp-pass" placeholder="Temporary password"></div>
-        <div class="form-group"><label>Department</label><input type="text" id="new-emp-dept" placeholder="e.g. Sales, IT, HR"></div>
+      <div class="fg-row">
+        <div class="fg"><label>Temporary Password</label>
+          <div class="input-eye">
+            <input type="password" id="ne-pass" placeholder="Set a password">
+            <button class="eye-btn" type="button" onclick="toggleEye('ne-pass',this)"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg></button>
+          </div>
+        </div>
+        <div class="fg"><label>Department</label><input type="text" id="ne-dept" placeholder="e.g. Sales, IT"></div>
       </div>
-      <div class="form-group"><label>Employee Email</label><input type="email" id="new-emp-email" placeholder="employee@company.com"></div>
-      <div class="form-group"><label>Position / Job Title</label><input type="text" id="new-emp-title" placeholder="e.g. Software Engineer"></div>
+      <div class="fg"><label>Employee Email (receives welcome email)</label><input type="email" id="ne-email" placeholder="employee@example.com"></div>
+      <div class="fg"><label>Position / Title</label><input type="text" id="ne-title" placeholder="e.g. Software Engineer"></div>
+      <div class="fg"><label>Phone (optional)</label><input type="text" id="ne-phone" placeholder="+92 xxx xxxxxxx"></div>
+      <div class="divider"></div>
+      <div style="display:flex;align-items:flex-start;gap:10px;padding:.85rem;background:var(--blue-l);border-radius:var(--r-sm);border:1px solid var(--blue-m)">
+        <input type="checkbox" id="ne-send-email" checked style="width:16px;height:16px;margin-top:2px;flex-shrink:0">
+        <div>
+          <label for="ne-send-email" style="font-weight:700;color:var(--ink2);cursor:pointer">Send welcome email to employee</label>
+          <div class="fg-hint" style="margin:0">Sends username, password, and the site URL to their email via EmailJS.</div>
+        </div>
+      </div>
     </div>
-    <div class="modal-footer">
-      <button class="btn btn-outline" onclick="closeModal('modal-add-emp')">Cancel</button>
-      <button class="btn btn-primary" onclick="addEmployee()">Create Account</button>
+    <div class="modal-ft">
+      <button class="btn btn-ghost" onclick="closeModal('m-add-emp')">Cancel</button>
+      <button class="btn btn-primary" onclick="saveNewEmp()">Create Account</button>
     </div>
   </div>
 </div>
 
-<!-- VIEW LOCATION MODAL -->
-<div class="modal-backdrop hidden" id="modal-location">
-  <div class="modal" style="max-width:420px;">
-    <div class="modal-header">
-      <div class="modal-title">Check-in Location</div>
-      <button class="modal-close" onclick="closeModal('modal-location')">✕</button>
+<!-- ── VIEW LOCATION MODAL ── -->
+<div class="modal-bg" id="m-loc">
+  <div class="modal" style="max-width:420px">
+    <div class="modal-hd"><div class="modal-title">Check-in Location</div><button class="modal-close" onclick="closeModal('m-loc')">✕</button></div>
+    <div class="modal-body" id="m-loc-body"></div>
+    <div class="modal-ft"><button class="btn btn-ghost" onclick="closeModal('m-loc')">Close</button></div>
+  </div>
+</div>
+
+<!-- ── EDIT EMPLOYEE MODAL ── -->
+<div class="modal-bg" id="m-edit-emp">
+  <div class="modal">
+    <div class="modal-hd"><div class="modal-title">Edit Employee</div><button class="modal-close" onclick="closeModal('m-edit-emp')">✕</button></div>
+    <div class="modal-body">
+      <input type="hidden" id="ee-id">
+      <div class="fg-row">
+        <div class="fg"><label>Full Name</label><input type="text" id="ee-name"></div>
+        <div class="fg"><label>Department</label><input type="text" id="ee-dept"></div>
+      </div>
+      <div class="fg"><label>Email</label><input type="email" id="ee-email"></div>
+      <div class="fg"><label>Position</label><input type="text" id="ee-title"></div>
+      <div class="fg"><label>New Password (leave blank to keep current)</label>
+        <div class="input-eye">
+          <input type="password" id="ee-pass" placeholder="New password (optional)">
+          <button class="eye-btn" type="button" onclick="toggleEye('ee-pass',this)"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg></button>
+        </div>
+      </div>
     </div>
-    <div class="modal-body" id="modal-location-body"></div>
-    <div class="modal-footer"><button class="btn btn-outline" onclick="closeModal('modal-location')">Close</button></div>
+    <div class="modal-ft">
+      <button class="btn btn-ghost" onclick="closeModal('m-edit-emp')">Cancel</button>
+      <button class="btn btn-primary" onclick="saveEditEmp()">Save Changes</button>
+    </div>
   </div>
 </div>
 
 <script>
-// ==================== DATA STORE ====================
-let db = {
-  employees: [], // {id, name, username, password, dept, email, title, createdAt}
-  attendance: [], // {id, empId, empName, date, checkIn, checkOut, status, lat, lng, locationName}
-  leaves: [], // {id, empId, empName, from, to, type, reason, status, createdAt}
-  holidays: [], // {date, name, createdAt}
-  settings: { serviceId:'', templateId:'', publicKey:'', adminEmail:'abdulhannankhan56@yahoo.com', lateThreshold:'09:30' }
-};
+// ═══════════════════════════════════════════════
+//  DATA
+// ═══════════════════════════════════════════════
+const KEY = 'at_v2';
+let DB = { admin:null, employees:[], attendance:[], leaves:[], holidays:[], cfg:{adminEmail:'abdulhannankhan56@yahoo.com',ejsKey:'',ejsSvc:'',ejsTpl:'',lateThreshold:'09:30',siteUrl:''} };
 
-let currentUser = null; // {id, name, username, role}
-let todayRecord = null; // current employee's today record
-
-function saveDB() { localStorage.setItem('attendtrack_db', JSON.stringify(db)); }
-function loadDB() {
-  const raw = localStorage.getItem('attendtrack_db');
-  if (raw) { try { db = {...db, ...JSON.parse(raw)}; } catch(e){} }
+function save(){ localStorage.setItem(KEY, JSON.stringify(DB)); }
+function load(){
+  try{
+    const r = localStorage.getItem(KEY);
+    if(r){ const p = JSON.parse(r); DB = {...DB, ...p}; if(!DB.cfg) DB.cfg = {adminEmail:'abdulhannankhan56@yahoo.com',ejsKey:'',ejsSvc:'',ejsTpl:'',lateThreshold:'09:30',siteUrl:''}; }
+  }catch(e){}
 }
 
-// ==================== AUTH ====================
-function login() {
-  const user = document.getElementById('login-user').value.trim();
-  const pass = document.getElementById('login-pass').value;
-  const alertEl = document.getElementById('login-alert');
-
-  if (user === 'admin' && pass === 'admin123') {
-    currentUser = { id: 'admin', name: 'Administrator', username: 'admin', role: 'admin' };
-    startApp();
-    return;
+// ═══════════════════════════════════════════════
+//  BOOT
+// ═══════════════════════════════════════════════
+load();
+(function boot(){
+  if(!DB.admin){
+    showScreen('screen-setup');
+  } else {
+    showScreen('screen-login');
   }
+  initEJS();
+})();
 
-  const emp = db.employees.find(e => e.username === user && e.password === pass);
-  if (emp) {
-    currentUser = { id: emp.id, name: emp.name, username: emp.username, role: 'employee' };
-    startApp();
-    return;
-  }
-
-  alertEl.innerHTML = '<div class="alert alert-danger">Invalid username or password.</div>';
+function showScreen(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('on'));
+  const el = document.getElementById(id);
+  el.classList.add('on');
+  if(id==='screen-app') el.style.display='flex';
+  else el.style.removeProperty('display');
 }
 
-function startApp() {
-  document.getElementById('auth-screen').style.display = 'none';
-  document.getElementById('app').style.display = 'block';
-  document.getElementById('sidebar-name').textContent = currentUser.name;
-  document.getElementById('sidebar-role').textContent = currentUser.role === 'admin' ? 'Administrator' : 'Employee';
-  document.getElementById('sidebar-avatar').textContent = currentUser.name.charAt(0).toUpperCase();
+// ═══════════════════════════════════════════════
+//  SETUP FLOW
+// ═══════════════════════════════════════════════
+let setupStep = 0;
+function setupNext(step){
+  ['setup-s0','setup-s1','setup-s2'].forEach((id,i)=>{
+    document.getElementById(id).style.display = i===step?'block':'none';
+  });
+  for(let i=0;i<3;i++){
+    const d=document.getElementById('dot'+i);
+    d.className='step-dot'+(i<step?' done':i===step?' active':'');
+  }
+  setupStep=step;
+}
 
-  if (currentUser.role === 'admin') {
-    document.getElementById('emp-nav').classList.add('hidden');
-    document.getElementById('admin-nav').classList.remove('hidden');
-    showPage('admin-dashboard');
+function setupStep1(){
+  const name=v('s-admin-name'), user=v('s-admin-user'), pass=v('s-admin-pass'), pass2=v('s-admin-pass2');
+  const a=document.getElementById('setup-s1-alert');
+  if(!name||!user||!pass){return a.innerHTML=err('All fields are required.');}
+  if(pass.length<6){return a.innerHTML=err('Password must be at least 6 characters.');}
+  if(pass!==pass2){return a.innerHTML=err('Passwords do not match.');}
+  a.innerHTML='';
+  DB.admin={name,username:user,password:pass};
+  save();
+  setupNext(2);
+}
+
+function setupFinish(withEJS){
+  if(withEJS){
+    const key=v('s-ejs-key'), svc=v('s-ejs-svc'), tpl=v('s-ejs-tpl'), email=v('s-admin-email');
+    DB.cfg.ejsKey=key; DB.cfg.ejsSvc=svc; DB.cfg.ejsTpl=tpl; DB.cfg.adminEmail=email||'abdulhannankhan56@yahoo.com';
+    save(); initEJS();
+  }
+  DB.cfg.adminEmail = DB.cfg.adminEmail || 'abdulhannankhan56@yahoo.com';
+  save();
+  showScreen('screen-login');
+}
+
+// ═══════════════════════════════════════════════
+//  AUTH
+// ═══════════════════════════════════════════════
+let CU = null; // current user
+
+function doLogin(){
+  const user=v('l-user'), pass=v('l-pass');
+  const a=document.getElementById('login-alert');
+  if(!user||!pass){return a.innerHTML=err('Enter username and password.');}
+
+  if(DB.admin && user===DB.admin.username && pass===DB.admin.password){
+    CU={id:'admin',name:DB.admin.name,username:DB.admin.username,role:'admin'};
+    launchApp(); return;
+  }
+  const emp=DB.employees.find(e=>e.username===user&&e.password===pass);
+  if(emp){
+    CU={id:emp.id,name:emp.name,username:emp.username,role:'employee'};
+    launchApp(); return;
+  }
+  a.innerHTML=err('Incorrect username or password.');
+}
+
+function launchApp(){
+  document.getElementById('sb-nm').textContent=CU.name;
+  document.getElementById('sb-rl').textContent=CU.role==='admin'?'Administrator':'Employee';
+  document.getElementById('sb-av').textContent=CU.name.charAt(0).toUpperCase();
+
+  if(CU.role==='admin'){
+    document.getElementById('nav-emp').style.display='none';
+    document.getElementById('nav-adm').style.display='block';
+    showScreen('screen-app');
+    goPage('a-dash');
     refreshAdminDash();
   } else {
-    document.getElementById('emp-nav').classList.remove('hidden');
-    document.getElementById('admin-nav').classList.add('hidden');
-    showPage('emp-dashboard');
-    loadEmpDashboard();
+    document.getElementById('nav-emp').style.display='block';
+    document.getElementById('nav-adm').style.display='none';
+    showScreen('screen-app');
+    goPage('e-dash');
+    loadEmpDash();
   }
   startClock();
-  loadSettings();
+  loadSettingsUI();
 }
 
-function logout() {
-  currentUser = null;
-  todayRecord = null;
-  document.getElementById('app').style.display = 'none';
-  document.getElementById('auth-screen').style.display = 'flex';
-  document.getElementById('login-user').value = '';
-  document.getElementById('login-pass').value = '';
-  document.getElementById('login-alert').innerHTML = '';
+function doLogout(){
+  CU=null;
+  document.getElementById('l-user').value='';
+  document.getElementById('l-pass').value='';
+  document.getElementById('login-alert').innerHTML='';
+  showScreen('screen-login');
 }
 
-// ==================== NAVIGATION ====================
-function showPage(id) {
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
+// ═══════════════════════════════════════════════
+//  NAVIGATION
+// ═══════════════════════════════════════════════
+function goPage(id){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('on'));
+  document.querySelectorAll('.sb-item').forEach(i=>i.classList.remove('act'));
+  document.getElementById(id)?.classList.add('on');
+  document.querySelector(`.sb-item[data-page="${id}"]`)?.classList.add('act');
+  closeSidebar();
 
-  const navMap = {
-    'emp-dashboard': 0, 'emp-attendance': 1, 'emp-leave': 2,
-    'admin-dashboard': 0, 'admin-employees': 1, 'admin-attendance': 2,
-    'admin-leave': 3, 'admin-holidays': 4, 'admin-settings': 5
+  const renders={
+    'e-att':renderEmpAtt,'e-leave':renderEmpLeave,
+    'a-emp':renderAEmp,'a-att':()=>{populateEmpFilter();renderAAdminAtt()},
+    'a-leave':renderALeave,'a-hol':renderAHol,'a-dash':refreshAdminDash
+  };
+  if(renders[id]) renders[id]();
+}
+
+// ═══════════════════════════════════════════════
+//  MOBILE SIDEBAR
+// ═══════════════════════════════════════════════
+function toggleSidebar(){
+  document.getElementById('sidebar').classList.toggle('open');
+  document.getElementById('sb-overlay').classList.toggle('open');
+}
+function closeSidebar(){
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('sb-overlay').classList.remove('open');
+}
+
+// ═══════════════════════════════════════════════
+//  CLOCK
+// ═══════════════════════════════════════════════
+function startClock(){
+  const tick=()=>{
+    const n=new Date();
+    const t=n.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
+    const d=n.toLocaleDateString('en-US',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
+    const cl=document.getElementById('ci-clock');
+    const dl=document.getElementById('ci-date');
+    if(cl)cl.textContent=t;
+    if(dl)dl.textContent=d;
+  };
+  tick(); setInterval(tick,1000);
+}
+
+// ═══════════════════════════════════════════════
+//  EMPLOYEE DASHBOARD
+// ═══════════════════════════════════════════════
+function today(){ return new Date().toISOString().split('T')[0]; }
+
+function loadEmpDash(){
+  const h=new Date().getHours();
+  const g=h<12?'Good morning':'Good afternoon';
+  document.getElementById('e-greeting').textContent=`${g}, ${CU.name}!`;
+
+  const hol=DB.holidays.find(x=>x.date===today());
+  document.getElementById('e-hol-banner').innerHTML=hol?holBanner(hol):'';
+
+  const rec=DB.attendance.find(a=>a.empId===CU.id&&a.date===today());
+  if(rec) refreshTodayCard(rec);
+
+  const mm=today().slice(0,7);
+  const myRecs=DB.attendance.filter(a=>a.empId===CU.id);
+  const mRecs=myRecs.filter(a=>a.date.startsWith(mm));
+  document.getElementById('es-present').textContent=mRecs.length;
+  document.getElementById('es-late').textContent=mRecs.filter(a=>a.status==='Late').length;
+  const wds=workdaysThisMonth();
+  const approved=DB.leaves.filter(l=>l.empId===CU.id&&l.status==='Approved');
+  let ld=0; approved.forEach(l=>{ld+=daysBetween(l.from,l.to);});
+  document.getElementById('es-leave').textContent=ld;
+  document.getElementById('es-absent').textContent=Math.max(0,wds-mRecs.length-ld);
+
+  if(hol) document.getElementById('btn-ci').disabled=true;
+}
+
+function refreshTodayCard(rec){
+  document.getElementById('btn-ci').style.display='none';
+  document.getElementById('btn-co').style.display=rec.checkOut?'none':'inline-flex';
+  const badge=document.getElementById('ci-status-badge');
+  badge.className='ci-status ci-in';
+  badge.textContent=rec.checkOut?`✓ Checked out at ${rec.checkOut}`:`● Checked in at ${rec.checkIn}`;
+  const c=document.getElementById('e-today-card');
+  c.style.display='block';
+  document.getElementById('td-ci').textContent=rec.checkIn;
+  document.getElementById('td-co').textContent=rec.checkOut||'—';
+  document.getElementById('td-st').innerHTML=rec.status==='Late'?'<span class="badge b-warning">Late</span>':'<span class="badge b-success">On Time</span>';
+  document.getElementById('td-loc').textContent=rec.locationName||(rec.lat?`${rec.lat.toFixed(5)}, ${rec.lng.toFixed(5)}`:'Location not available');
+}
+
+function doCheckIn(){
+  if(DB.attendance.find(a=>a.empId===CU.id&&a.date===today())?.checkIn) return;
+  const btn=document.getElementById('btn-ci');
+  btn.textContent='Locating…'; btn.disabled=true;
+
+  const proceed=(lat,lng,locName)=>{
+    const n=new Date();
+    const ts=n.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
+    const thr=DB.cfg.lateThreshold||'09:30';
+    const [th,tm]=thr.split(':').map(Number);
+    const late=n.getHours()>th||(n.getHours()===th&&n.getMinutes()>=tm);
+    const rec={id:'a'+Date.now(),empId:CU.id,empName:CU.name,date:today(),checkIn:ts,checkOut:null,status:late?'Late':'On Time',lat,lng,locationName:locName};
+    DB.attendance.push(rec);
+    save();
+    btn.textContent='Check In'; btn.disabled=false;
+    refreshTodayCard(rec);
+    sendCheckinEmail(rec,'in');
+    if(CU.role==='admin') refreshAdminDash();
   };
 
-  const role = currentUser?.role;
-  const items = document.querySelectorAll(role === 'admin' ? '#admin-nav .nav-item' : '#emp-nav .nav-item');
-  const idx = navMap[id];
-  if (items[idx]) items[idx].classList.add('active');
-
-  if (id === 'emp-attendance') renderEmpAttendance();
-  if (id === 'emp-leave') renderEmpLeave();
-  if (id === 'admin-employees') renderEmployeesTable();
-  if (id === 'admin-attendance') { populateEmpFilter(); renderAdminAttendance(); }
-  if (id === 'admin-leave') renderAdminLeave();
-  if (id === 'admin-holidays') renderHolidays();
-  if (id === 'admin-dashboard') refreshAdminDash();
+  if(navigator.geolocation){
+    navigator.geolocation.getCurrentPosition(pos=>{
+      const {latitude:la,longitude:lo}=pos.coords;
+      reverseGeo(la,lo,name=>proceed(la,lo,name));
+    },()=>proceed(null,null,'Location permission denied'),{timeout:10000});
+  } else { proceed(null,null,'Geolocation not supported'); }
 }
 
-// ==================== CLOCK ====================
-function startClock() {
-  function tick() {
-    const now = new Date();
-    const t = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
-    const d = now.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
-    const el = document.getElementById('live-clock');
-    const del = document.getElementById('live-date');
-    if (el) el.textContent = t;
-    if (del) del.textContent = d;
-  }
-  tick();
-  setInterval(tick, 1000);
-}
-
-// ==================== EMPLOYEE DASHBOARD ====================
-function getToday() { return new Date().toISOString().split('T')[0]; }
-
-function loadEmpDashboard() {
-  const hour = new Date().getHours();
-  const greeting = hour < 12 ? 'Good morning' : hour < 17 ? 'Good afternoon' : 'Good evening';
-  document.getElementById('emp-greeting').textContent = `${greeting}, ${currentUser.name}!`;
-
-  // Check holiday
-  const today = getToday();
-  const holiday = db.holidays.find(h => h.date === today);
-  const hbanner = document.getElementById('holiday-banner-emp');
-  if (holiday) {
-    hbanner.innerHTML = `<div class="holiday-banner"><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg><div><div style="font-weight:700;font-size:1rem;">Today is a Holiday</div><div style="opacity:0.9;margin-top:2px;">${holiday.name}</div></div></div>`;
-    document.getElementById('btn-checkin').disabled = true;
-  } else { hbanner.innerHTML = ''; }
-
-  // Find today's record
-  todayRecord = db.attendance.find(a => a.empId === currentUser.id && a.date === today);
-  if (todayRecord) {
-    updateCheckinUI(todayRecord);
-  }
-
-  // Stats
-  const myRecords = db.attendance.filter(a => a.empId === currentUser.id);
-  const thisMonth = new Date().toISOString().slice(0,7);
-  const monthRecs = myRecords.filter(a => a.date.startsWith(thisMonth));
-  document.getElementById('stat-present').textContent = monthRecs.length;
-  document.getElementById('stat-late').textContent = monthRecs.filter(a => a.status === 'Late').length;
-
-  // Working days this month (approx)
-  const myLeaves = db.leaves.filter(l => l.empId === currentUser.id && l.status === 'Approved');
-  let leaveCount = 0;
-  myLeaves.forEach(l => {
-    const from = new Date(l.from), to = new Date(l.to);
-    leaveCount += Math.ceil((to - from) / 86400000) + 1;
-  });
-  document.getElementById('stat-leave-used').textContent = leaveCount;
-
-  const workDays = getWorkdaysThisMonth();
-  const absent = Math.max(0, workDays - monthRecs.length - leaveCount);
-  document.getElementById('stat-absent').textContent = absent;
-}
-
-function getWorkdaysThisMonth() {
-  const now = new Date();
-  let count = 0;
-  for (let d = 1; d <= now.getDate(); d++) {
-    const day = new Date(now.getFullYear(), now.getMonth(), d).getDay();
-    if (day !== 0 && day !== 6) count++;
-  }
-  return count;
-}
-
-function updateCheckinUI(rec) {
-  const badge = document.getElementById('checkin-status-badge');
-  if (rec.checkIn) {
-    badge.className = 'checkin-status status-checked-in';
-    badge.textContent = rec.checkOut ? `✓ Checked out at ${rec.checkOut}` : `● Checked in at ${rec.checkIn}`;
-    document.getElementById('btn-checkin').classList.add('hidden');
-    if (!rec.checkOut) document.getElementById('btn-checkout').classList.remove('hidden');
-    else document.getElementById('btn-checkout').classList.add('hidden');
-
-    const infoCard = document.getElementById('today-info');
-    infoCard.classList.remove('hidden');
-    document.getElementById('td-checkin').textContent = rec.checkIn;
-    document.getElementById('td-checkout').textContent = rec.checkOut || '—';
-    document.getElementById('td-status').innerHTML = rec.status === 'Late' ?
-      '<span class="badge badge-warning">Late</span>' : '<span class="badge badge-success">On Time</span>';
-    document.getElementById('td-location').textContent = rec.locationName || `${rec.lat?.toFixed(4)}, ${rec.lng?.toFixed(4)}` || 'Location unavailable';
-  }
-}
-
-function checkIn() {
-  if (todayRecord?.checkIn) return;
-  const btn = document.getElementById('btn-checkin');
-  btn.textContent = 'Getting location...';
-  btn.disabled = true;
-
-  const proceed = (lat, lng, locationName) => {
-    const now = new Date();
-    const timeStr = now.toLocaleTimeString('en-US', {hour:'2-digit', minute:'2-digit', second:'2-digit'});
-    const threshold = db.settings.lateThreshold || '09:30';
-    const [th, tm] = threshold.split(':').map(Number);
-    const isLate = now.getHours() > th || (now.getHours() === th && now.getMinutes() >= tm);
-
-    todayRecord = {
-      id: 'att_' + Date.now(),
-      empId: currentUser.id,
-      empName: currentUser.name,
-      date: getToday(),
-      checkIn: timeStr,
-      checkOut: null,
-      status: isLate ? 'Late' : 'On Time',
-      lat, lng, locationName
-    };
-    db.attendance.push(todayRecord);
-    saveDB();
-    updateCheckinUI(todayRecord);
-    btn.textContent = 'Check In';
-    btn.disabled = false;
-    sendCheckinEmail(todayRecord);
-    refreshAdminDash();
-  };
-
-  if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(pos => {
-      const lat = pos.coords.latitude, lng = pos.coords.longitude;
-      reverseGeocode(lat, lng, name => proceed(lat, lng, name));
-    }, err => {
-      proceed(null, null, 'Location permission denied');
-    }, { timeout: 8000 });
-  } else {
-    proceed(null, null, 'Geolocation not supported');
-  }
-}
-
-function reverseGeocode(lat, lng, cb) {
-  fetch(`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}&format=json`)
-    .then(r => r.json())
-    .then(data => {
-      const addr = data.display_name || `${lat.toFixed(4)}, ${lng.toFixed(4)}`;
-      cb(addr.split(',').slice(0,3).join(','));
-    })
-    .catch(() => cb(`${lat.toFixed(4)}, ${lng.toFixed(4)}`));
-}
-
-function checkOut() {
-  if (!todayRecord || todayRecord.checkOut) return;
-  const now = new Date();
-  const timeStr = now.toLocaleTimeString('en-US', {hour:'2-digit', minute:'2-digit', second:'2-digit'});
-  todayRecord.checkOut = timeStr;
-  const rec = db.attendance.find(a => a.id === todayRecord.id);
-  if (rec) rec.checkOut = timeStr;
-  saveDB();
-  updateCheckinUI(todayRecord);
+function doCheckOut(){
+  const rec=DB.attendance.find(a=>a.empId===CU.id&&a.date===today());
+  if(!rec||rec.checkOut) return;
+  const n=new Date();
+  const ts=n.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
+  rec.checkOut=ts;
+  save();
+  refreshTodayCard(rec);
+  sendCheckinEmail(rec,'out');
   refreshAdminDash();
 }
 
-// ==================== EMAIL ====================
-function sendEmail(templateParams) {
-  const s = db.settings;
-  if (!s.serviceId || !s.templateId || !s.publicKey) return;
-  try {
-    emailjs.init(s.publicKey);
-    emailjs.send(s.serviceId, s.templateId, templateParams);
-  } catch(e) { console.log('Email not configured:', e); }
+function reverseGeo(lat,lng,cb){
+  fetch(`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}&format=json`,{headers:{'Accept-Language':'en'}})
+    .then(r=>r.json()).then(d=>{
+      const addr=d.display_name||`${lat.toFixed(5)}, ${lng.toFixed(5)}`;
+      cb(addr.split(',').slice(0,4).join(',').trim());
+    }).catch(()=>cb(`${lat.toFixed(5)}, ${lng.toFixed(5)}`));
 }
 
-function sendCheckinEmail(rec) {
-  sendEmail({
-    to_email: db.settings.adminEmail,
-    subject: `[AttendTrack] ${rec.empName} checked in`,
-    message: `Employee: ${rec.empName}\nDate: ${rec.date}\nCheck-in Time: ${rec.checkIn}\nStatus: ${rec.status}\nLocation: ${rec.locationName || `${rec.lat}, ${rec.lng}` || 'Not available'}`
-  });
-}
-
-function sendNewEmpEmail(emp) {
-  sendEmail({
-    to_email: db.settings.adminEmail,
-    subject: `[AttendTrack] New employee account created: ${emp.name}`,
-    message: `A new employee account has been created.\n\nName: ${emp.name}\nUsername: ${emp.username}\nDepartment: ${emp.dept}\nPosition: ${emp.title}\nCreated: ${new Date().toLocaleString()}`
-  });
-}
-
-// ==================== EMPLOYEE MANAGEMENT ====================
-function openAddEmployeeModal() {
-  ['new-emp-name','new-emp-user','new-emp-pass','new-emp-dept','new-emp-email','new-emp-title'].forEach(id => document.getElementById(id).value = '');
-  document.getElementById('modal-emp-alert').innerHTML = '';
-  document.getElementById('modal-add-emp').classList.remove('hidden');
-}
-
-function addEmployee() {
-  const name = document.getElementById('new-emp-name').value.trim();
-  const user = document.getElementById('new-emp-user').value.trim();
-  const pass = document.getElementById('new-emp-pass').value;
-  const dept = document.getElementById('new-emp-dept').value.trim();
-  const email = document.getElementById('new-emp-email').value.trim();
-  const title = document.getElementById('new-emp-title').value.trim();
-  const alertEl = document.getElementById('modal-emp-alert');
-
-  if (!name || !user || !pass) { alertEl.innerHTML = '<div class="alert alert-danger">Name, username, and password are required.</div>'; return; }
-  if (db.employees.find(e => e.username === user)) { alertEl.innerHTML = '<div class="alert alert-danger">Username already exists.</div>'; return; }
-
-  const emp = { id: 'emp_' + Date.now(), name, username: user, password: pass, dept, email, title, createdAt: new Date().toISOString() };
-  db.employees.push(emp);
-  saveDB();
-  closeModal('modal-add-emp');
-  renderEmployeesTable();
-  refreshAdminDash();
-  sendNewEmpEmail(emp);
-  populateEmpFilter();
-}
-
-function renderEmployeesTable() {
-  const el = document.getElementById('employees-table');
-  if (!db.employees.length) { el.innerHTML = '<div class="empty-state"><svg viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>No employees yet.</div>'; return; }
-  el.innerHTML = `<div class="table-wrap"><table><thead><tr><th>Name</th><th>Username</th><th>Department</th><th>Position</th><th>Email</th><th>Actions</th></tr></thead><tbody>
-    ${db.employees.map(e => `<tr>
-      <td><div style="display:flex;align-items:center;gap:8px;"><div style="width:30px;height:30px;border-radius:50%;background:var(--primary-light);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:0.75rem;color:var(--primary);">${e.name.charAt(0)}</div>${e.name}</div></td>
-      <td><code style="font-size:0.8rem;background:var(--gray-100);padding:2px 6px;border-radius:4px;">${e.username}</code></td>
-      <td>${e.dept || '—'}</td><td>${e.title || '—'}</td><td>${e.email || '—'}</td>
-      <td><button class="btn btn-danger btn-sm" onclick="deleteEmployee('${e.id}')">Remove</button></td>
+// ═══════════════════════════════════════════════
+//  EMPLOYEE ATTENDANCE HISTORY
+// ═══════════════════════════════════════════════
+function renderEmpAtt(){
+  const recs=DB.attendance.filter(a=>a.empId===CU.id).sort((a,b)=>b.date.localeCompare(a.date));
+  const el=document.getElementById('e-att-body');
+  if(!recs.length){el.innerHTML=emptyState('No records yet.');return;}
+  el.innerHTML=tblWrap(`<table><thead><tr><th>Date</th><th>Check-in</th><th>Check-out</th><th>Status</th><th>Hours</th></tr></thead><tbody>
+    ${recs.map(r=>`<tr>
+      <td>${fmtDate(r.date)}</td>
+      <td>${r.checkIn||'—'}</td><td>${r.checkOut||'—'}</td>
+      <td>${statusBadge(r.status)}</td>
+      <td>${calcDur(r.checkIn,r.checkOut)}</td>
     </tr>`).join('')}
-  </tbody></table></div>`;
+  </tbody></table>`);
 }
 
-function deleteEmployee(id) {
-  if (!confirm('Remove this employee account? Their attendance records will be kept.')) return;
-  db.employees = db.employees.filter(e => e.id !== id);
-  saveDB();
-  renderEmployeesTable();
-  refreshAdminDash();
-}
-
-// ==================== ATTENDANCE RENDERING ====================
-function renderEmpAttendance() {
-  const recs = db.attendance.filter(a => a.empId === currentUser.id).sort((a,b) => b.date.localeCompare(a.date));
-  const el = document.getElementById('emp-att-table');
-  if (!recs.length) { el.innerHTML = '<div class="empty-state">No records yet.</div>'; return; }
-  el.innerHTML = `<div class="table-wrap"><table><thead><tr><th>Date</th><th>Check-in</th><th>Check-out</th><th>Status</th><th>Duration</th></tr></thead><tbody>
-    ${recs.map(r => `<tr>
-      <td>${formatDate(r.date)}</td>
-      <td>${r.checkIn || '—'}</td>
-      <td>${r.checkOut || '—'}</td>
-      <td>${r.status === 'Late' ? '<span class="badge badge-warning">Late</span>' : '<span class="badge badge-success">On Time</span>'}</td>
-      <td>${calcDuration(r.checkIn, r.checkOut)}</td>
-    </tr>`).join('')}
-  </tbody></table></div>`;
-}
-
-function renderAdminAttendance() {
-  let recs = [...db.attendance].sort((a,b) => b.date.localeCompare(a.date) || b.checkIn?.localeCompare(a.checkIn || '') || 0);
-  const empF = document.getElementById('filter-emp')?.value;
-  const fromF = document.getElementById('filter-from')?.value;
-  const toF = document.getElementById('filter-to')?.value;
-  if (empF) recs = recs.filter(r => r.empId === empF);
-  if (fromF) recs = recs.filter(r => r.date >= fromF);
-  if (toF) recs = recs.filter(r => r.date <= toF);
-
-  const el = document.getElementById('admin-att-table');
-  if (!recs.length) { el.innerHTML = '<div class="empty-state">No records match your filter.</div>'; return; }
-  el.innerHTML = `<div class="table-wrap"><table><thead><tr><th>Employee</th><th>Date</th><th>Check-in</th><th>Check-out</th><th>Status</th><th>Duration</th><th>Location</th></tr></thead><tbody>
-    ${recs.map(r => `<tr>
-      <td><strong>${r.empName}</strong></td>
-      <td>${formatDate(r.date)}</td>
-      <td>${r.checkIn || '—'}</td>
-      <td>${r.checkOut || '—'}</td>
-      <td>${r.status === 'Late' ? '<span class="badge badge-warning">Late</span>' : '<span class="badge badge-success">On Time</span>'}</td>
-      <td>${calcDuration(r.checkIn, r.checkOut)}</td>
-      <td>${r.lat ? `<button class="btn btn-outline btn-sm" onclick="viewLocation('${r.id}')">📍 View</button>` : '<span class="text-muted text-sm">N/A</span>'}</td>
-    </tr>`).join('')}
-  </tbody></table></div>`;
-}
-
-function viewLocation(recId) {
-  const rec = db.attendance.find(a => a.id === recId);
-  if (!rec) return;
-  const body = document.getElementById('modal-location-body');
-  body.innerHTML = `
-    <p><strong>Employee:</strong> ${rec.empName}</p>
-    <p style="margin-top:8px;"><strong>Date:</strong> ${formatDate(rec.date)} at ${rec.checkIn}</p>
-    <p style="margin-top:8px;"><strong>Address:</strong> ${rec.locationName || 'Not available'}</p>
-    <p style="margin-top:8px;"><strong>Coordinates:</strong> ${rec.lat?.toFixed(6)}, ${rec.lng?.toFixed(6)}</p>
-    ${rec.lat ? `<div style="margin-top:1rem;">
-      <a href="https://www.google.com/maps?q=${rec.lat},${rec.lng}" target="_blank" class="btn btn-primary btn-sm">
-        Open in Google Maps
-      </a>
-    </div>` : ''}
-  `;
-  document.getElementById('modal-location').classList.remove('hidden');
-}
-
-function populateEmpFilter() {
-  const sel = document.getElementById('filter-emp');
-  if (!sel) return;
-  const cur = sel.value;
-  sel.innerHTML = '<option value="">All Employees</option>' + db.employees.map(e => `<option value="${e.id}" ${e.id===cur?'selected':''}>${e.name}</option>`).join('');
-}
-
-function clearFilters() {
-  document.getElementById('filter-emp').value = '';
-  document.getElementById('filter-from').value = '';
-  document.getElementById('filter-to').value = '';
-  renderAdminAttendance();
-}
-
-function calcDuration(inn, out) {
-  if (!inn || !out) return '—';
-  try {
-    const parse = s => { const [t,m] = s.split(' '); let [h,min] = t.split(':').map(Number); if(m==='PM'&&h!==12)h+=12; if(m==='AM'&&h===12)h=0; return h*60+min; };
-    const diff = parse(out) - parse(inn);
-    if (diff < 0) return '—';
-    return `${Math.floor(diff/60)}h ${diff%60}m`;
-  } catch(e) { return '—'; }
-}
-
-// ==================== LEAVE MANAGEMENT ====================
-function submitLeave() {
-  const from = document.getElementById('leave-from').value;
-  const to = document.getElementById('leave-to').value;
-  const type = document.getElementById('leave-type').value;
-  const reason = document.getElementById('leave-reason').value.trim();
-  const alertEl = document.getElementById('leave-submit-alert');
-
-  if (!from || !to || !reason) { alertEl.innerHTML = '<div class="alert alert-danger">Please fill in all fields.</div>'; return; }
-  if (from > to) { alertEl.innerHTML = '<div class="alert alert-danger">End date must be after start date.</div>'; return; }
-
-  db.leaves.push({ id: 'lv_'+Date.now(), empId: currentUser.id, empName: currentUser.name, from, to, type, reason, status: 'Pending', createdAt: new Date().toISOString() });
-  saveDB();
-  alertEl.innerHTML = '<div class="alert alert-success">Leave request submitted successfully. Awaiting admin approval.</div>';
-  document.getElementById('leave-from').value = '';
-  document.getElementById('leave-to').value = '';
-  document.getElementById('leave-reason').value = '';
+// ═══════════════════════════════════════════════
+//  EMPLOYEE LEAVE
+// ═══════════════════════════════════════════════
+function submitLeave(){
+  const from=v('lv-from'),to=v('lv-to'),type=v('lv-type'),reason=v('lv-reason');
+  const a=document.getElementById('e-leave-alert');
+  if(!from||!to||!reason){return a.innerHTML=err('All fields are required.');}
+  if(from>to){return a.innerHTML=err('End date must be after start date.');}
+  DB.leaves.push({id:'l'+Date.now(),empId:CU.id,empName:CU.name,from,to,type,reason,status:'Pending',createdAt:new Date().toISOString()});
+  save();
+  a.innerHTML=ok('Request submitted. Awaiting admin approval.');
+  document.getElementById('lv-from').value='';
+  document.getElementById('lv-to').value='';
+  document.getElementById('lv-reason').value='';
   renderEmpLeave();
   refreshAdminDash();
 }
 
-function renderEmpLeave() {
-  const leaves = db.leaves.filter(l => l.empId === currentUser.id).sort((a,b) => b.createdAt.localeCompare(a.createdAt));
-  const el = document.getElementById('emp-leave-table');
-  if (!leaves.length) { el.innerHTML = '<div class="empty-state">No leave requests yet.</div>'; return; }
-  el.innerHTML = `<div class="table-wrap"><table><thead><tr><th>Type</th><th>From</th><th>To</th><th>Days</th><th>Reason</th><th>Status</th></tr></thead><tbody>
-    ${leaves.map(l => `<tr>
-      <td>${l.type}</td>
-      <td>${formatDate(l.from)}</td>
-      <td>${formatDate(l.to)}</td>
-      <td>${Math.ceil((new Date(l.to)-new Date(l.from))/86400000)+1}</td>
-      <td style="max-width:200px;">${l.reason}</td>
-      <td>${statusBadge(l.status)}</td>
+function renderEmpLeave(){
+  const items=DB.leaves.filter(l=>l.empId===CU.id).sort((a,b)=>b.createdAt.localeCompare(a.createdAt));
+  const el=document.getElementById('e-leave-body');
+  if(!items.length){el.innerHTML=emptyState('No leave requests yet.');return;}
+  el.innerHTML=tblWrap(`<table><thead><tr><th>Type</th><th>From</th><th>To</th><th>Days</th><th>Reason</th><th>Status</th></tr></thead><tbody>
+    ${items.map(l=>`<tr>
+      <td>${l.type}</td><td>${fmtDate(l.from)}</td><td>${fmtDate(l.to)}</td>
+      <td>${daysBetween(l.from,l.to)}</td>
+      <td style="max-width:160px;white-space:normal">${l.reason}</td>
+      <td>${leaveBadge(l.status)}</td>
     </tr>`).join('')}
-  </tbody></table></div>`;
+  </tbody></table>`);
 }
 
-function renderAdminLeave() {
-  const leaves = [...db.leaves].sort((a,b) => b.createdAt.localeCompare(a.createdAt));
-  const el = document.getElementById('admin-leave-table');
-  if (!leaves.length) { el.innerHTML = '<div class="empty-state">No leave requests.</div>'; return; }
-  el.innerHTML = `<div class="table-wrap"><table><thead><tr><th>Employee</th><th>Type</th><th>From</th><th>To</th><th>Days</th><th>Reason</th><th>Status</th><th>Action</th></tr></thead><tbody>
-    ${leaves.map(l => `<tr>
+// ═══════════════════════════════════════════════
+//  ADMIN DASHBOARD
+// ═══════════════════════════════════════════════
+function refreshAdminDash(){
+  if(CU?.role!=='admin') return;
+  const td=today();
+  const todayRecs=DB.attendance.filter(a=>a.date===td);
+  document.getElementById('as-emps').textContent=DB.employees.length;
+  document.getElementById('as-today').textContent=todayRecs.length;
+  document.getElementById('as-late').textContent=todayRecs.filter(a=>a.status==='Late').length;
+  document.getElementById('as-leave').textContent=DB.leaves.filter(l=>l.status==='Pending').length;
+
+  const hol=DB.holidays.find(h=>h.date===td);
+  document.getElementById('a-hol-banner').innerHTML=hol?holBanner(hol):'';
+
+  const body=document.getElementById('a-today-body');
+  if(!todayRecs.length){body.innerHTML=emptyState('No check-ins today.');return;}
+  body.innerHTML=tblWrap(`<table><thead><tr><th>Employee</th><th>Check-in</th><th>Check-out</th><th>Status</th><th>Location</th></tr></thead><tbody>
+    ${todayRecs.map(r=>`<tr>
+      <td><strong>${r.empName}</strong></td>
+      <td>${r.checkIn}</td>
+      <td>${r.checkOut||'<span class="badge b-info">Active</span>'}</td>
+      <td>${statusBadge(r.status)}</td>
+      <td>${r.lat?`<button class="btn btn-ghost btn-sm" onclick="viewLoc('${r.id}')">📍 View</button>`:'<span class="text-muted text-sm">N/A</span>'}</td>
+    </tr>`).join('')}
+  </tbody></table>`);
+}
+
+// ═══════════════════════════════════════════════
+//  ADMIN EMPLOYEES
+// ═══════════════════════════════════════════════
+function openAddEmp(){
+  ['ne-name','ne-user','ne-pass','ne-dept','ne-email','ne-title','ne-phone'].forEach(id=>{
+    document.getElementById(id).value='';
+  });
+  document.getElementById('ne-send-email').checked=true;
+  document.getElementById('m-emp-alert').innerHTML='';
+  openModal('m-add-emp');
+}
+
+function saveNewEmp(){
+  const name=v('ne-name'),user=v('ne-user'),pass=v('ne-pass'),dept=v('ne-dept'),email=v('ne-email'),title=v('ne-title'),phone=v('ne-phone');
+  const a=document.getElementById('m-emp-alert');
+  if(!name||!user||!pass){return a.innerHTML=err('Name, username, and password are required.');}
+  if(DB.employees.find(e=>e.username===user)){return a.innerHTML=err('Username already exists. Choose a different one.');}
+  const emp={id:'e'+Date.now(),name,username:user,password:pass,dept,email,title,phone,createdAt:new Date().toISOString()};
+  DB.employees.push(emp);
+  save();
+  closeModal('m-add-emp');
+  renderAEmp();
+  refreshAdminDash();
+  populateEmpFilter();
+  // Email notifications
+  if(document.getElementById('ne-send-email').checked && email){
+    sendWelcomeEmail(emp);
+  }
+  sendNewEmpNotif(emp);
+}
+
+function renderAEmp(){
+  const el=document.getElementById('a-emp-body');
+  if(!DB.employees.length){el.innerHTML=emptyState('No employees yet. Click "Add Employee" to create one.');return;}
+  el.innerHTML=tblWrap(`<table><thead><tr><th>Name</th><th>Username</th><th>Dept</th><th>Position</th><th>Email</th><th>Actions</th></tr></thead><tbody>
+    ${DB.employees.map(e=>`<tr>
+      <td><div style="display:flex;align-items:center;gap:8px">
+        <div style="width:30px;height:30px;border-radius:50%;background:var(--blue-l);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.72rem;color:var(--blue);flex-shrink:0">${e.name.charAt(0)}</div>
+        <strong>${e.name}</strong></div></td>
+      <td><code class="tag">${e.username}</code></td>
+      <td>${e.dept||'—'}</td><td>${e.title||'—'}</td><td>${e.email||'—'}</td>
+      <td><div class="flex-gap">
+        <button class="btn btn-ghost btn-sm" onclick="openEditEmp('${e.id}')">Edit</button>
+        <button class="btn btn-danger btn-sm" onclick="removeEmp('${e.id}')">Remove</button>
+      </div></td>
+    </tr>`).join('')}
+  </tbody></table>`);
+}
+
+function openEditEmp(id){
+  const e=DB.employees.find(x=>x.id===id);
+  if(!e) return;
+  document.getElementById('ee-id').value=id;
+  document.getElementById('ee-name').value=e.name;
+  document.getElementById('ee-dept').value=e.dept||'';
+  document.getElementById('ee-email').value=e.email||'';
+  document.getElementById('ee-title').value=e.title||'';
+  document.getElementById('ee-pass').value='';
+  openModal('m-edit-emp');
+}
+
+function saveEditEmp(){
+  const id=v('ee-id'),e=DB.employees.find(x=>x.id===id);
+  if(!e) return;
+  e.name=v('ee-name')||e.name;
+  e.dept=v('ee-dept');
+  e.email=v('ee-email');
+  e.title=v('ee-title');
+  const np=v('ee-pass');
+  if(np) e.password=np;
+  save();
+  closeModal('m-edit-emp');
+  renderAEmp();
+}
+
+function removeEmp(id){
+  if(!confirm('Remove this employee? Their attendance records will be kept.')) return;
+  DB.employees=DB.employees.filter(e=>e.id!==id);
+  save();
+  renderAEmp();
+  refreshAdminDash();
+  populateEmpFilter();
+}
+
+// ═══════════════════════════════════════════════
+//  ADMIN ATTENDANCE
+// ═══════════════════════════════════════════════
+function populateEmpFilter(){
+  const sel=document.getElementById('f-emp');
+  if(!sel) return;
+  const cur=sel.value;
+  sel.innerHTML='<option value="">All employees</option>'+DB.employees.map(e=>`<option value="${e.id}"${e.id===cur?' selected':''}>${e.name}</option>`).join('');
+}
+
+function renderAAdminAtt(){
+  let recs=[...DB.attendance].sort((a,b)=>b.date.localeCompare(a.date)||(b.checkIn||'').localeCompare(a.checkIn||''));
+  const ef=v('f-emp'),ff=v('f-from'),tf=v('f-to');
+  if(ef) recs=recs.filter(r=>r.empId===ef);
+  if(ff) recs=recs.filter(r=>r.date>=ff);
+  if(tf) recs=recs.filter(r=>r.date<=tf);
+  const el=document.getElementById('a-att-body');
+  if(!recs.length){el.innerHTML=emptyState('No records match the current filter.');return;}
+  el.innerHTML=tblWrap(`<table><thead><tr><th>Employee</th><th>Date</th><th>Check-in</th><th>Check-out</th><th>Status</th><th>Duration</th><th>Location</th></tr></thead><tbody>
+    ${recs.map(r=>`<tr>
+      <td><strong>${r.empName}</strong></td>
+      <td>${fmtDate(r.date)}</td>
+      <td>${r.checkIn||'—'}</td><td>${r.checkOut||'—'}</td>
+      <td>${statusBadge(r.status)}</td>
+      <td>${calcDur(r.checkIn,r.checkOut)}</td>
+      <td>${r.lat?`<button class="btn btn-ghost btn-sm" onclick="viewLoc('${r.id}')">📍 View</button>`:'<span class="text-muted text-sm">—</span>'}</td>
+    </tr>`).join('')}
+  </tbody></table>`);
+}
+
+function clearAttFilters(){
+  document.getElementById('f-emp').value='';
+  document.getElementById('f-from').value='';
+  document.getElementById('f-to').value='';
+  renderAAdminAtt();
+}
+
+function viewLoc(id){
+  const r=DB.attendance.find(a=>a.id===id);
+  if(!r) return;
+  document.getElementById('m-loc-body').innerHTML=`
+    <p><strong>Employee:</strong> ${r.empName}</p>
+    <p class="mt1"><strong>Date:</strong> ${fmtDate(r.date)} — ${r.checkIn}</p>
+    <p class="mt1"><strong>Address:</strong> ${r.locationName||'Not available'}</p>
+    ${r.lat?`<p class="mt1"><strong>Coordinates:</strong> ${r.lat.toFixed(6)}, ${r.lng.toFixed(6)}</p>
+    <div class="mt2">
+      <a href="https://www.google.com/maps?q=${r.lat},${r.lng}" target="_blank" rel="noopener" class="btn btn-primary btn-sm">Open in Google Maps</a>
+    </div>`:''}
+  `;
+  openModal('m-loc');
+}
+
+// ═══════════════════════════════════════════════
+//  ADMIN LEAVE
+// ═══════════════════════════════════════════════
+function renderALeave(){
+  const items=[...DB.leaves].sort((a,b)=>b.createdAt.localeCompare(a.createdAt));
+  const el=document.getElementById('a-leave-body');
+  if(!items.length){el.innerHTML=emptyState('No leave requests yet.');return;}
+  el.innerHTML=tblWrap(`<table><thead><tr><th>Employee</th><th>Type</th><th>From</th><th>To</th><th>Days</th><th>Reason</th><th>Status</th><th>Action</th></tr></thead><tbody>
+    ${items.map(l=>`<tr>
       <td><strong>${l.empName}</strong></td>
       <td>${l.type}</td>
-      <td>${formatDate(l.from)}</td>
-      <td>${formatDate(l.to)}</td>
-      <td>${Math.ceil((new Date(l.to)-new Date(l.from))/86400000)+1}</td>
-      <td style="max-width:160px;">${l.reason}</td>
-      <td>${statusBadge(l.status)}</td>
-      <td>
-        ${l.status==='Pending' ? `
-          <div class="gap-2">
-            <button class="btn btn-success btn-sm" onclick="updateLeave('${l.id}','Approved')">Approve</button>
-            <button class="btn btn-danger btn-sm" onclick="updateLeave('${l.id}','Rejected')">Reject</button>
-          </div>` : '—'}
-      </td>
+      <td>${fmtDate(l.from)}</td><td>${fmtDate(l.to)}</td>
+      <td>${daysBetween(l.from,l.to)}</td>
+      <td style="max-width:160px;white-space:normal;font-size:.82rem">${l.reason}</td>
+      <td>${leaveBadge(l.status)}</td>
+      <td>${l.status==='Pending'?`<div class="flex-gap">
+        <button class="btn btn-success btn-sm" onclick="updateLeave('${l.id}','Approved')">Approve</button>
+        <button class="btn btn-danger btn-sm" onclick="updateLeave('${l.id}','Rejected')">Reject</button>
+      </div>`:'—'}</td>
     </tr>`).join('')}
-  </tbody></table></div>`;
+  </tbody></table>`);
 }
 
-function updateLeave(id, status) {
-  const leaf = db.leaves.find(l => l.id === id);
-  if (leaf) { leaf.status = status; saveDB(); renderAdminLeave(); refreshAdminDash(); }
+function updateLeave(id,status){
+  const l=DB.leaves.find(x=>x.id===id);
+  if(l){l.status=status;save();renderALeave();refreshAdminDash();}
 }
 
-// ==================== HOLIDAYS ====================
-function declareHoliday() {
-  const date = document.getElementById('holiday-date').value;
-  const name = document.getElementById('holiday-name').value.trim();
-  const alertEl = document.getElementById('holiday-alert');
-  if (!date || !name) { alertEl.innerHTML = '<div class="alert alert-danger">Date and holiday name are required.</div>'; return; }
-  if (db.holidays.find(h => h.date === date)) { alertEl.innerHTML = '<div class="alert alert-warning">A holiday is already declared for this date.</div>'; return; }
-  db.holidays.push({ date, name, createdAt: new Date().toISOString() });
-  saveDB();
-  alertEl.innerHTML = `<div class="alert alert-success">Holiday "${name}" declared for ${formatDate(date)}.</div>`;
-  document.getElementById('holiday-date').value = '';
-  document.getElementById('holiday-name').value = '';
-  renderHolidays();
+// ═══════════════════════════════════════════════
+//  HOLIDAYS
+// ═══════════════════════════════════════════════
+function declareHol(){
+  const date=v('h-date'),name=v('h-name');
+  const a=document.getElementById('hol-alert');
+  if(!date||!name){return a.innerHTML=err('Date and name are required.');}
+  if(DB.holidays.find(h=>h.date===date)){return a.innerHTML=warn('A holiday already exists for this date.');}
+  DB.holidays.push({date,name,createdAt:new Date().toISOString()});
+  save();
+  a.innerHTML=ok(`Holiday "${name}" declared for ${fmtDate(date)}.`);
+  document.getElementById('h-date').value='';
+  document.getElementById('h-name').value='';
+  renderAHol();
 }
 
-function renderHolidays() {
-  const el = document.getElementById('holidays-list');
-  const sorted = [...db.holidays].sort((a,b) => b.date.localeCompare(a.date));
-  if (!sorted.length) { el.innerHTML = '<div class="empty-state">No holidays declared yet.</div>'; return; }
-  el.innerHTML = `<div class="table-wrap"><table><thead><tr><th>Date</th><th>Holiday Name</th><th>Declared</th><th>Action</th></tr></thead><tbody>
-    ${sorted.map(h => `<tr>
-      <td><strong>${formatDate(h.date)}</strong></td>
-      <td>${h.name} ${h.date===getToday()?'<span class="badge badge-warning">Today</span>':''}</td>
+function renderAHol(){
+  const items=[...DB.holidays].sort((a,b)=>b.date.localeCompare(a.date));
+  const el=document.getElementById('a-hol-body');
+  if(!items.length){el.innerHTML=emptyState('No holidays declared.');return;}
+  el.innerHTML=tblWrap(`<table><thead><tr><th>Date</th><th>Name</th><th>Added</th><th>Action</th></tr></thead><tbody>
+    ${items.map(h=>`<tr>
+      <td><strong>${fmtDate(h.date)}</strong>${h.date===today()?' <span class="badge b-warning">Today</span>':''}</td>
+      <td>${h.name}</td>
       <td class="text-sm text-muted">${new Date(h.createdAt).toLocaleDateString()}</td>
-      <td><button class="btn btn-danger btn-sm" onclick="removeHoliday('${h.date}')">Remove</button></td>
+      <td><button class="btn btn-danger btn-sm" onclick="removeHol('${h.date}')">Remove</button></td>
     </tr>`).join('')}
-  </tbody></table></div>`;
+  </tbody></table>`);
 }
 
-function removeHoliday(date) {
-  if (!confirm('Remove this holiday?')) return;
-  db.holidays = db.holidays.filter(h => h.date !== date);
-  saveDB();
-  renderHolidays();
+function removeHol(date){
+  if(!confirm('Remove this holiday?')) return;
+  DB.holidays=DB.holidays.filter(h=>h.date!==date);
+  save();
+  renderAHol();
 }
 
-// ==================== ADMIN DASHBOARD ====================
-function refreshAdminDash() {
-  if (currentUser?.role !== 'admin') return;
-  document.getElementById('adm-total-emp').textContent = db.employees.length;
+// ═══════════════════════════════════════════════
+//  SETTINGS
+// ═══════════════════════════════════════════════
+function loadSettingsUI(){
+  const c=DB.cfg;
+  setVal('cfg-email',c.adminEmail);
+  setVal('cfg-key',c.ejsKey);
+  setVal('cfg-svc',c.ejsSvc);
+  setVal('cfg-tpl',c.ejsTpl);
+  setVal('cfg-late',c.lateThreshold||'09:30');
+  setVal('cfg-url',c.siteUrl);
+  updateEJSStatus();
+}
 
-  const today = getToday();
-  const todayRecs = db.attendance.filter(a => a.date === today);
-  document.getElementById('adm-checked-today').textContent = todayRecs.length;
-  document.getElementById('adm-late-today').textContent = todayRecs.filter(a => a.status === 'Late').length;
-  document.getElementById('adm-pending-leave').textContent = db.leaves.filter(l => l.status === 'Pending').length;
+function saveSettings(){
+  DB.cfg.adminEmail=v('cfg-email')||'abdulhannankhan56@yahoo.com';
+  DB.cfg.ejsKey=v('cfg-key');
+  DB.cfg.ejsSvc=v('cfg-svc');
+  DB.cfg.ejsTpl=v('cfg-tpl');
+  DB.cfg.lateThreshold=v('cfg-late')||'09:30';
+  DB.cfg.siteUrl=v('cfg-url');
+  save();
+  initEJS();
+  document.getElementById('settings-alert').innerHTML=ok('Settings saved successfully.');
+  updateEJSStatus();
+}
 
-  const holiday = db.holidays.find(h => h.date === today);
-  const hb = document.getElementById('holiday-banner-admin');
-  if (hb) hb.innerHTML = holiday ? `<div class="holiday-banner"><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg><div><div style="font-weight:700;">Today is a Holiday: ${holiday.name}</div></div></div>` : '';
-
-  const actEl = document.getElementById('today-activity-table');
-  if (actEl) {
-    if (!todayRecs.length) { actEl.innerHTML = '<div class="empty-state">No check-ins today yet.</div>'; }
-    else {
-      actEl.innerHTML = `<div class="table-wrap"><table><thead><tr><th>Employee</th><th>Check-in</th><th>Check-out</th><th>Status</th><th>Location</th></tr></thead><tbody>
-        ${todayRecs.map(r=>`<tr>
-          <td><strong>${r.empName}</strong></td>
-          <td>${r.checkIn}</td>
-          <td>${r.checkOut||'<span class="badge badge-info">Active</span>'}</td>
-          <td>${r.status==='Late'?'<span class="badge badge-warning">Late</span>':'<span class="badge badge-success">On Time</span>'}</td>
-          <td>${r.lat?`<button class="btn btn-outline btn-sm" onclick="viewLocation('${r.id}')">📍 View</button>`:'<span class="text-muted text-sm">N/A</span>'}</td>
-        </tr>`).join('')}
-      </tbody></table></div>`;
-    }
+function updateEJSStatus(){
+  const c=DB.cfg;
+  const dot=document.getElementById('ejs-dot');
+  const txt=document.getElementById('ejs-status-text');
+  if(!dot||!txt) return;
+  if(c.ejsKey&&c.ejsSvc&&c.ejsTpl){
+    dot.className='ejs-dot ok';
+    txt.textContent='EmailJS configured — notifications active';
+  } else if(c.ejsKey||c.ejsSvc||c.ejsTpl){
+    dot.className='ejs-dot partial';
+    txt.textContent='EmailJS partially configured — some fields missing';
+  } else {
+    dot.className='ejs-dot no';
+    txt.textContent='EmailJS not configured — email notifications disabled';
   }
 }
 
-// ==================== SETTINGS ====================
-function loadSettings() {
-  const s = db.settings;
-  const fields = { 'ejs-service': 'serviceId', 'ejs-template': 'templateId', 'ejs-key': 'publicKey', 'admin-email': 'adminEmail', 'late-threshold': 'lateThreshold' };
-  Object.entries(fields).forEach(([elId, key]) => { const el = document.getElementById(elId); if(el && s[key]) el.value = s[key]; });
+function testEmail(){
+  if(!DB.cfg.ejsKey||!DB.cfg.ejsSvc||!DB.cfg.ejsTpl){
+    document.getElementById('settings-alert').innerHTML=err('Configure EmailJS first.');
+    return;
+  }
+  sendMail(DB.cfg.adminEmail,'[AttendTrack] Test email','This is a test notification from AttendTrack. Email notifications are working correctly.',()=>{
+    document.getElementById('settings-alert').innerHTML=ok('Test email sent! Check your inbox.');
+  },()=>{
+    document.getElementById('settings-alert').innerHTML=err('Email failed. Check your EmailJS credentials.');
+  });
 }
 
-function saveSettings() {
-  db.settings = {
-    serviceId: document.getElementById('ejs-service').value.trim(),
-    templateId: document.getElementById('ejs-template').value.trim(),
-    publicKey: document.getElementById('ejs-key').value.trim(),
-    adminEmail: document.getElementById('admin-email').value.trim(),
-    lateThreshold: document.getElementById('late-threshold').value.trim() || '09:30'
-  };
-  saveDB();
-  document.getElementById('settings-alert').innerHTML = '<div class="alert alert-success">Settings saved successfully.</div>';
+// ═══════════════════════════════════════════════
+//  EMAIL
+// ═══════════════════════════════════════════════
+function initEJS(){
+  if(DB.cfg.ejsKey){
+    try{ emailjs.init(DB.cfg.ejsKey); }catch(e){}
+  }
 }
 
-// ==================== HELPERS ====================
-function formatDate(dateStr) {
-  if (!dateStr) return '—';
-  const d = new Date(dateStr + 'T12:00:00');
-  return d.toLocaleDateString('en-US', { weekday:'short', year:'numeric', month:'short', day:'numeric' });
+function sendMail(to,subject,message,onOk,onErr){
+  const c=DB.cfg;
+  if(!c.ejsKey||!c.ejsSvc||!c.ejsTpl) return;
+  emailjs.send(c.ejsSvc,c.ejsTpl,{to_email:to,subject,message})
+    .then(()=>{if(onOk)onOk();})
+    .catch(e=>{console.warn('Email error:',e);if(onErr)onErr();});
 }
 
-function statusBadge(status) {
-  const map = { Pending: 'badge-warning', Approved: 'badge-success', Rejected: 'badge-danger' };
-  return `<span class="badge ${map[status]||'badge-gray'}">${status}</span>`;
+function sendCheckinEmail(rec,type){
+  const isIn=type==='in';
+  const sub=`[AttendTrack] ${rec.empName} checked ${isIn?'in':'out'}`;
+  const loc=rec.locationName||(rec.lat?`${rec.lat.toFixed(5)}, ${rec.lng.toFixed(5)}`:'Not available');
+  const msg=isIn
+    ?`Employee Check-In Alert\n\nEmployee: ${rec.empName}\nDate: ${rec.date}\nCheck-in Time: ${rec.checkIn}\nStatus: ${rec.status}\nLocation: ${loc}\n\n— AttendTrack`
+    :`Employee Check-Out Alert\n\nEmployee: ${rec.empName}\nDate: ${rec.date}\nCheck-out Time: ${rec.checkOut}\nDuration: ${calcDur(rec.checkIn,rec.checkOut)}\n\n— AttendTrack`;
+  sendMail(DB.cfg.adminEmail,sub,msg);
 }
 
-function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
+function sendWelcomeEmail(emp){
+  const url=DB.cfg.siteUrl||'(Ask your administrator for the website link)';
+  const sub=`Your AttendTrack login details`;
+  const msg=`Hello ${emp.name},\n\nYour attendance account has been created.\n\nUsername: ${emp.username}\nPassword: ${emp.password}\nWebsite: ${url}\n\nPlease log in and mark your attendance daily.\n\n— AttendTrack Administrator`;
+  sendMail(emp.email,sub,msg);
+}
 
-// ==================== INIT ====================
-loadDB();
+function sendNewEmpNotif(emp){
+  const sub=`[AttendTrack] New employee account created: ${emp.name}`;
+  const msg=`A new employee account has been created.\n\nName: ${emp.name}\nUsername: ${emp.username}\nDepartment: ${emp.dept||'—'}\nPosition: ${emp.title||'—'}\nEmail: ${emp.email||'—'}\nCreated: ${new Date().toLocaleString()}\n\n— AttendTrack`;
+  sendMail(DB.cfg.adminEmail,sub,msg);
+}
+
+// ═══════════════════════════════════════════════
+//  MODALS
+// ═══════════════════════════════════════════════
+function openModal(id){ document.getElementById(id).classList.add('open'); }
+function closeModal(id){ document.getElementById(id).classList.remove('open'); }
+
+// ═══════════════════════════════════════════════
+//  HELPERS
+// ═══════════════════════════════════════════════
+function v(id){ return document.getElementById(id)?.value?.trim()||''; }
+function setVal(id,val){ const el=document.getElementById(id); if(el) el.value=val||''; }
+function tblWrap(html){ return `<div class="tbl-wrap">${html}</div>`; }
+function emptyState(msg){ return `<div class="empty"><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg><p>${msg}</p></div>`; }
+function err(m){ return `<div class="alert a-danger"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>${m}</div>`; }
+function ok(m){ return `<div class="alert a-success"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>${m}</div>`; }
+function warn(m){ return `<div class="alert a-warning"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"/></svg>${m}</div>`; }
+function statusBadge(s){ return s==='Late'?'<span class="badge b-warning">Late</span>':'<span class="badge b-success">On Time</span>'; }
+function leaveBadge(s){ const m={Pending:'b-warning',Approved:'b-success',Rejected:'b-danger'}; return `<span class="badge ${m[s]||'b-gray'}">${s}</span>`; }
+function holBanner(h){ return `<div class="hol-banner"><svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg><div><strong>Today is a Holiday</strong><div style="opacity:.9;font-size:.85rem;margin-top:2px">${h.name}</div></div></div>`; }
+
+function fmtDate(d){
+  if(!d) return '—';
+  return new Date(d+'T12:00:00').toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric',year:'numeric'});
+}
+
+function daysBetween(from,to){
+  const d=Math.ceil((new Date(to)-new Date(from))/86400000)+1;
+  return isNaN(d)?1:Math.max(1,d);
+}
+
+function workdaysThisMonth(){
+  const n=new Date(); let c=0;
+  for(let i=1;i<=n.getDate();i++){
+    const day=new Date(n.getFullYear(),n.getMonth(),i).getDay();
+    if(day!==0&&day!==6) c++;
+  }
+  return c;
+}
+
+function calcDur(inT,outT){
+  if(!inT||!outT) return '—';
+  try{
+    const parse=s=>{
+      const parts=s.split(' ');
+      let[h,m]=parts[0].split(':').map(Number);
+      if(parts[1]==='PM'&&h!==12)h+=12;
+      if(parts[1]==='AM'&&h===12)h=0;
+      return h*60+m;
+    };
+    const diff=parse(outT)-parse(inT);
+    if(diff<0) return '—';
+    return `${Math.floor(diff/60)}h ${diff%60}m`;
+  }catch(e){return '—';}
+}
+
+function toggleEye(inputId,btn){
+  const inp=document.getElementById(inputId);
+  if(!inp) return;
+  inp.type=inp.type==='password'?'text':'password';
+}
 </script>
 </body>
 </html>
+<!-- HTMLEOF
+echo "Done"
+Output
+
+Done -->
+
